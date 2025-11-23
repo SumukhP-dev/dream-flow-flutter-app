@@ -1,0 +1,22 @@
+# Mock HuggingFace Inference API Service
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies for image processing
+RUN apt-get update && apt-get install -y \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install dependencies
+RUN pip install --no-cache-dir fastapi uvicorn pillow numpy
+
+# Copy mock service
+COPY mock_hf_service.py ./main.py
+
+EXPOSE 8001
+
+CMD ["python", "main.py"]
+
