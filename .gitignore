@@ -1,0 +1,29 @@
+# Configuration files with secrets
+config.json
+
+# Environment files
+backend_fastapi/.env
+frontend_flutter/.env
+
+# Keystore files
+*.jks
+*.keystore
+*.p12
+*.p8
+
+# Key properties
+frontend_flutter/android/key.properties
+
+# Build artifacts
+frontend_flutter/build.sh
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
