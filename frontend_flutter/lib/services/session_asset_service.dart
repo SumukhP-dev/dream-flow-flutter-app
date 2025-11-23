@@ -45,7 +45,11 @@ class SessionAssetService {
         tempFile.path,
         name: '${_sanitizeAlbumName(albumName)}_frame_$i',
       );
-      await tempFile.delete().catchError((_) {});
+      try {
+        await tempFile.delete();
+      } catch (_) {
+        // Ignore delete errors
+      }
       if (_didSaveSucceed(result)) {
         savedCount++;
       }

@@ -602,14 +602,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     button: true,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF8B5CF6),
-                      minimumSize: const Size.fromHeight(56),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        backgroundColor: const Color(0xFF8B5CF6),
+                        minimumSize: const Size.fromHeight(56),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        shadowColor: const Color(0xFF8B5CF6).withValues(alpha: 0.5),
                       ),
-                      shadowColor: const Color(0xFF8B5CF6).withValues(alpha: 0.5),
-                    ),
-                    onPressed: _isGenerating ? null : _handleGenerate,
+                      onPressed: _isGenerating ? null : _handleGenerate,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -636,6 +636,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ],
+                    ),
                     ),
                   ),
                   if (_errorMessage != null) ...[

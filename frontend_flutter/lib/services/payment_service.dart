@@ -100,24 +100,10 @@ class PaymentService {
       // For now, redirect to Stripe Checkout
       // In production, you'd create a checkout session via your backend
       // Note: This requires backend implementation
+      // Stripe web checkout requires backend implementation
+      // TODO: Implement /api/v1/payments/create-checkout endpoint
       throw PaymentException(
         'Stripe web checkout requires backend implementation. Please implement /api/v1/payments/create-checkout endpoint.',
-      );
-
-      if (await canLaunchUrl(Uri.parse(checkoutUrl))) {
-        await launchUrl(
-          Uri.parse(checkoutUrl),
-          mode: LaunchMode.externalApplication,
-        );
-      } else {
-        throw PaymentException('Could not launch checkout URL');
-      }
-
-      // After successful payment, Stripe will redirect back
-      // The webhook will update the subscription in the backend
-      // For now, we'll need to poll or use a callback
-      throw PaymentException(
-        'Stripe web checkout not fully implemented. Use mobile app for in-app purchases.',
       );
     } catch (e) {
       if (e is PaymentException) rethrow;
@@ -193,18 +179,21 @@ class PaymentService {
       );
 
       return subscription;
-    } on PlatformException catch (e) {
-      if (e.code == PurchasesErrorHelper.purchaseCancelledErrorCode) {
-        throw PaymentException('Purchase was cancelled');
-      } else if (e.code == PurchasesErrorHelper.purchaseNotAllowedErrorCode) {
-        throw PaymentException('Purchase not allowed');
-      } else if (e.code == PurchasesErrorHelper.purchaseInvalidErrorCode) {
-        throw PaymentException('Purchase invalid');
-      } else {
-        throw PaymentException('Purchase failed: ${e.message}');
-      }
     } catch (e) {
       if (e is PaymentException) rethrow;
+      
+      // Handle RevenueCat-specific errors
+      // Note: PurchasesErrorException may not be available in all versions
+      // Check error message for common patterns
+      final errorString = e.toString().toLowerCase();
+      if (errorString.contains('cancelled') || errorString.contains('cancel')) {
+        throw PaymentException('Purchase was cancelled');
+      } else if (errorString.contains('not allowed')) {
+        throw PaymentException('Purchase not allowed');
+      } else if (errorString.contains('invalid')) {
+        throw PaymentException('Purchase invalid');
+      }
+      
       throw PaymentException(
         'Failed to process RevenueCat payment: ${e.toString()}',
       );

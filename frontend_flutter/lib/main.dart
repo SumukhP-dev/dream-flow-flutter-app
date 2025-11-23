@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// Localization will be generated - temporarily commented out
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'services/auth_service.dart';
@@ -120,7 +121,7 @@ class _MyAppState extends State<MyApp> {
       title: 'Dream Flow',
       theme: theme,
       localizationsDelegates: const [
-        AppLocalizations.delegate,
+        // AppLocalizations.delegate, // Uncomment after running: flutter gen-l10n
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
