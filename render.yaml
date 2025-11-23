@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: dream-flow-backend
+    env: docker
+    dockerfilePath: ./backend_fastapi/Dockerfile
+    dockerContext: ./backend_fastapi
+    plan: starter  # $7/month, can upgrade later
+    region: oregon  # or closest to your users
+    branch: main  # or your production branch
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: ASSET_DIR
+        value: /app/storage
+      - key: SENTRY_ENVIRONMENT
+        value: production
+      # Note: Sensitive env vars (SUPABASE_SERVICE_ROLE_KEY, etc.) 
+      # should be added via Render dashboard, not in this file
+
