@@ -1,0 +1,52 @@
+{
+  "app": {
+    "bundle_id": "com.yourcompany.dreamflow",
+    "package_name": "com.yourcompany.dreamflow"
+  },
+  "supabase": {
+    "url": "https://your-project.supabase.co",
+    "anon_key": "your-anon-key",
+    "service_role_key": "your-service-role-key"
+  },
+  "stripe": {
+    "publishable_key": "pk_test_...",
+    "secret_key": "sk_test_...",
+    "webhook_secret": "whsec_...",
+    "premium_monthly_price_id": "price_...",
+    "premium_annual_price_id": "price_...",
+    "family_monthly_price_id": "price_...",
+    "family_annual_price_id": "price_..."
+  },
+  "revenuecat": {
+    "api_key": "appl_... or goog_..."
+  },
+  "admob": {
+    "ios_app_id": "ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX",
+    "android_app_id": "ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX",
+    "banner_ad_unit_id": "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX",
+    "interstitial_ad_unit_id": "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
+  },
+  "adsense": {
+    "publisher_id": "pub-..."
+  },
+  "huggingface": {
+    "token": "hf_..."
+  },
+  "backend": {
+    "url": "https://your-backend-url.com"
+  },
+  "sentry": {
+    "dsn": "",
+    "environment": "development"
+  },
+  "environment": "production",
+  "android_keystore": {
+    "generate": false,
+    "path": "~/dream-flow-keystore.jks",
+    "alias": "dream-flow-key",
+    "store_password": "",
+    "key_password": "",
+    "dname": "CN=Dream Flow, OU=Development, O=Your Company, L=City, ST=State, C=US"
+  }
+}
+
