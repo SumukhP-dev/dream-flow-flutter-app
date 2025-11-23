@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+jobs:
+  flutter:
+    name: Flutter CI
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+      
+      - name: Get Flutter dependencies
+        working-directory: frontend_flutter
+        run: flutter pub get
+      
+      - name: Verify Flutter formatting
+        working-directory: frontend_flutter
+        run: flutter format --set-exit-if-changed .
+      
+      - name: Run Flutter analyzer
+        working-directory: frontend_flutter
+        run: flutter analyze
+      
+      - name: Run Flutter tests
+        working-directory: frontend_flutter
+        run: flutter test
+
+  fastapi:
+    name: FastAPI CI
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: backend_fastapi/requirements.txt
+      
+      - name: Install dependencies
+        working-directory: backend_fastapi
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install ruff
+      
+      - name: Run Ruff linter
+        working-directory: backend_fastapi
+        run: |
+          ruff check app/ tests/
+          ruff format --check app/ tests/
+      
+      - name: Run pytest
+        working-directory: backend_fastapi
+        run: pytest -v
+        env:
+          # Add any required environment variables for tests
+          PYTHONPATH: ${{ github.workspace }}/backend_fastapi
+
