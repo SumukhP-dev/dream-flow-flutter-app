@@ -6,26 +6,21 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 class SessionAssetService {
-  SessionAssetService({http.Client? client}) : _client = client ?? http.Client();
+  SessionAssetService({http.Client? client})
+    : _client = client ?? http.Client();
 
   final http.Client _client;
 
   static const String _downloadFolderName = 'DreamFlow';
 
-  Future<File> downloadVideo({
-    required String url,
-    required String fileName,
-  }) {
+  Future<File> downloadVideo({required String url, required String fileName}) {
     return _downloadIntoDownloads(
       url: url,
       fileName: fileName.endsWith('.mp4') ? fileName : '$fileName.mp4',
     );
   }
 
-  Future<File> downloadAudio({
-    required String url,
-    required String fileName,
-  }) {
+  Future<File> downloadAudio({required String url, required String fileName}) {
     return _downloadIntoDownloads(url: url, fileName: fileName);
   }
 
@@ -38,7 +33,8 @@ class SessionAssetService {
       final frameUrl = frameUrls[i];
       final tempFile = await _downloadToTemp(
         url: frameUrl,
-        fileName: '${_sanitizeAlbumName(albumName)}_frame_$i'
+        fileName:
+            '${_sanitizeAlbumName(albumName)}_frame_$i'
             '${_extensionFromUrl(frameUrl, fallback: '.png')}',
       );
       final result = await ImageGallerySaver.saveFile(
@@ -62,10 +58,7 @@ class SessionAssetService {
     return savedCount;
   }
 
-  Future<File> cacheForShare({
-    required String url,
-    required String fileName,
-  }) {
+  Future<File> cacheForShare({required String url, required String fileName}) {
     return _downloadToTemp(url: url, fileName: fileName);
   }
 
@@ -109,7 +102,8 @@ class SessionAssetService {
       if (downloads != null && downloads.isNotEmpty) {
         baseDirectory = downloads.first;
       } else {
-        baseDirectory = await getExternalStorageDirectory() ??
+        baseDirectory =
+            await getExternalStorageDirectory() ??
             await getApplicationDocumentsDirectory();
       }
     } else if (Platform.isIOS) {
@@ -118,7 +112,9 @@ class SessionAssetService {
       baseDirectory = await getApplicationDocumentsDirectory();
     }
 
-    final directory = Directory(p.join(baseDirectory.path, _downloadFolderName));
+    final directory = Directory(
+      p.join(baseDirectory.path, _downloadFolderName),
+    );
     if (!await directory.exists()) {
       await directory.create(recursive: true);
     }
@@ -129,8 +125,9 @@ class SessionAssetService {
     final parsed = Uri.parse(url);
     final ext = p.extension(parsed.path);
     if (ext.isEmpty) {
-      final normalizedFallback =
-          fallback.startsWith('.') ? fallback : '.$fallback';
+      final normalizedFallback = fallback.startsWith('.')
+          ? fallback
+          : '.$fallback';
       return normalizedFallback;
     }
     return ext;
@@ -150,4 +147,3 @@ class SessionAssetService {
     return input.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '_');
   }
 }
-
