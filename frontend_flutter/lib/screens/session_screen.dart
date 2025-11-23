@@ -81,7 +81,7 @@ class _SessionScreenState extends State<SessionScreen> {
       // Initialize video controller
       _videoController?.dispose();
       _chewieController?.dispose();
-      
+
       // Check for cached video first
       final cachedVideo = await _videoService.getCachedVideo(videoUrl);
       if (cachedVideo != null && await cachedVideo.exists()) {
@@ -89,21 +89,23 @@ class _SessionScreenState extends State<SessionScreen> {
         _videoController = VideoPlayerController.file(cachedVideo);
       } else {
         // Use network video
-        _videoController = VideoPlayerController.networkUrl(Uri.parse(videoUrl));
+        _videoController = VideoPlayerController.networkUrl(
+          Uri.parse(videoUrl),
+        );
         // Cache video in background if offline mode is enabled
         if (_offlineEnabled) {
           _cacheVideoInBackground(videoUrl);
         }
       }
-      
+
       // Attempt to initialize video - this can fail
       await _videoController!.initialize();
-      
+
       // Check if initialization was successful
       if (!_videoController!.value.isInitialized) {
         throw Exception('Video player failed to initialize');
       }
-      
+
       _chewieController = ChewieController(
         videoPlayerController: _videoController!,
         looping: true,
@@ -112,18 +114,15 @@ class _SessionScreenState extends State<SessionScreen> {
         allowMuting: true,
         allowPlaybackSpeedChanging: false,
       );
-      
+
       setState(() {
         _isVideoReady = true;
         _isVideoError = false;
       });
-      
+
       // Try to play audio (non-blocking for video errors)
       try {
-        await _audioService.playUrl(
-          audioUrl,
-          preferCache: _offlineEnabled,
-        );
+        await _audioService.playUrl(audioUrl, preferCache: _offlineEnabled);
         setState(() {
           _isAudioPlaying = true;
           _playbackStartTime = DateTime.now();
@@ -140,7 +139,7 @@ class _SessionScreenState extends State<SessionScreen> {
       _chewieController = null;
       _videoController?.dispose();
       _videoController = null;
-      
+
       setState(() {
         _isVideoReady = false;
         _isVideoError = true;
@@ -156,8 +155,10 @@ class _SessionScreenState extends State<SessionScreen> {
   @override
   Widget build(BuildContext context) {
     final experience = widget.experience;
-    final paragraphs =
-        experience.storyText.split('\n').where((p) => p.trim().isNotEmpty).toList();
+    final paragraphs = experience.storyText
+        .split('\n')
+        .where((p) => p.trim().isNotEmpty)
+        .toList();
 
     return Scaffold(
       backgroundColor: const Color(0xFF05020C),
@@ -224,13 +225,13 @@ class _SessionScreenState extends State<SessionScreen> {
           child: _isVideoError
               ? _buildVideoErrorPlaceholder()
               : _isVideoReady && _chewieController != null
-                  ? Chewie(controller: _chewieController!)
-                  : Container(
-                      color: Colors.white.withValues(alpha: 0.05),
-                      child: const Center(
-                        child: CircularProgressIndicator(color: Colors.white),
-                      ),
-                    ),
+              ? Chewie(controller: _chewieController!)
+              : Container(
+                  color: Colors.white.withValues(alpha: 0.05),
+                  child: const Center(
+                    child: CircularProgressIndicator(color: Colors.white),
+                  ),
+                ),
         ),
       ),
     );
@@ -423,10 +424,7 @@ class _SessionScreenState extends State<SessionScreen> {
         widget.experience.videoUrl,
         fallback: '.mp4',
       );
-      final fileName = _buildFileName(
-        suffix: 'session',
-        extension: extension,
-      );
+      final fileName = _buildFileName(suffix: 'session', extension: extension);
       final file = await _assetService.downloadVideo(
         url: widget.experience.videoUrl,
         fileName: fileName,
@@ -508,10 +506,7 @@ class _SessionScreenState extends State<SessionScreen> {
           ),
         );
         attachments.add(
-          XFile(
-            videoFile.path,
-            mimeType: _mimeTypeForExtension(videoExt),
-          ),
+          XFile(videoFile.path, mimeType: _mimeTypeForExtension(videoExt)),
         );
       } catch (_) {
         // Ignore failures so we can still share other assets.
@@ -530,10 +525,7 @@ class _SessionScreenState extends State<SessionScreen> {
           ),
         );
         attachments.add(
-          XFile(
-            audioFile.path,
-            mimeType: _mimeTypeForExtension(audioExt),
-          ),
+          XFile(audioFile.path, mimeType: _mimeTypeForExtension(audioExt)),
         );
       } catch (_) {
         // Ignore failures so long as we have something to share.
@@ -545,12 +537,7 @@ class _SessionScreenState extends State<SessionScreen> {
           experience: widget.experience,
           customMessage: 'A bedtime story just for you',
         );
-        attachments.add(
-          XFile(
-            storyCard.path,
-            mimeType: 'image/png',
-          ),
-        );
+        attachments.add(XFile(storyCard.path, mimeType: 'image/png'));
       } catch (_) {
         // Ignore story card generation failures
       }
@@ -621,8 +608,7 @@ class _SessionScreenState extends State<SessionScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor:
-            isError ? Colors.redAccent : const Color(0xFF16A34A),
+        backgroundColor: isError ? Colors.redAccent : const Color(0xFF16A34A),
       ),
     );
   }
@@ -632,18 +618,12 @@ class _SessionScreenState extends State<SessionScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('Please enable storage access in Settings.'),
-        action: SnackBarAction(
-          label: 'Settings',
-          onPressed: openAppSettings,
-        ),
+        action: SnackBarAction(label: 'Settings', onPressed: openAppSettings),
       ),
     );
   }
 
-  String _buildFileName({
-    required String suffix,
-    required String extension,
-  }) {
+  String _buildFileName({required String suffix, required String extension}) {
     final sanitized = widget.experience.theme
         .toLowerCase()
         .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
@@ -770,8 +750,8 @@ class _SessionScreenState extends State<SessionScreen> {
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, progress) {
                       if (progress == null) return child;
-                    return Container(
-                      color: Colors.white.withValues(alpha: 0.04),
+                      return Container(
+                        color: Colors.white.withValues(alpha: 0.04),
                         child: const Center(
                           child: CircularProgressIndicator(strokeWidth: 2),
                         ),
@@ -814,8 +794,11 @@ class _SessionScreenState extends State<SessionScreen> {
                     colors: [Color(0xFF8B5CF6), Color(0xFF06B6D4)],
                   ),
                 ),
-                child:
-                    const Icon(Icons.spatial_audio_off, color: Colors.white, size: 30),
+                child: const Icon(
+                  Icons.spatial_audio_off,
+                  color: Colors.white,
+                  size: 30,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -823,7 +806,9 @@ class _SessionScreenState extends State<SessionScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _isAudioPlaying ? 'Narration playing' : 'Narration paused',
+                      _isAudioPlaying
+                          ? 'Narration playing'
+                          : 'Narration paused',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -845,7 +830,9 @@ class _SessionScreenState extends State<SessionScreen> {
               IconButton(
                 iconSize: 32,
                 icon: Icon(
-                  _isAudioPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
+                  _isAudioPlaying
+                      ? Icons.pause_circle_filled
+                      : Icons.play_circle_fill,
                   color: Colors.white,
                 ),
                 onPressed: () async {
@@ -854,7 +841,9 @@ class _SessionScreenState extends State<SessionScreen> {
                     setState(() => _isAudioPlaying = false);
                     // Show feedback modal if user stopped playback and hasn't shown it yet
                     if (!_hasShownFeedback && _playbackStartTime != null) {
-                      final playbackDuration = DateTime.now().difference(_playbackStartTime!);
+                      final playbackDuration = DateTime.now().difference(
+                        _playbackStartTime!,
+                      );
                       // Only show if they played for at least 30 seconds
                       if (playbackDuration.inSeconds >= 30) {
                         _showFeedbackModal();
@@ -955,10 +944,12 @@ class _SessionScreenState extends State<SessionScreen> {
 
   Future<void> _loadOfflineState() async {
     try {
-      final hasAudioCache =
-          await _audioService.hasCachedNarration(widget.experience.audioUrl);
-      final hasVideoCache =
-          await _videoService.hasCachedVideo(widget.experience.videoUrl);
+      final hasAudioCache = await _audioService.hasCachedNarration(
+        widget.experience.audioUrl,
+      );
+      final hasVideoCache = await _videoService.hasCachedVideo(
+        widget.experience.videoUrl,
+      );
       if (!mounted) return;
       setState(() {
         _hasOfflineNarration = hasAudioCache;
@@ -972,9 +963,9 @@ class _SessionScreenState extends State<SessionScreen> {
 
   Future<void> _cacheVideoInBackground(String videoUrl) async {
     if (_isCachingVideo) return;
-    
+
     setState(() => _isCachingVideo = true);
-    
+
     try {
       await _videoService.cacheVideo(videoUrl);
       await _videoService.trimCacheIfNeeded();
@@ -1138,7 +1129,6 @@ class _SessionScreenState extends State<SessionScreen> {
       ),
     );
   }
-
 }
 
 enum _PermissionScope { downloads, gallery }

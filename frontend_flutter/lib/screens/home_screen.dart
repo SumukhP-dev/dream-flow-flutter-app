@@ -205,7 +205,10 @@ class _HomeScreenState extends State<HomeScreen> {
             final prefs = profile['preferences'] as List<dynamic>;
             _selectedPreferences.clear();
             _selectedPreferences.addAll(
-                prefs.map((e) => e.toString()).where((p) => _preferenceOptions.contains(p)));
+              prefs
+                  .map((e) => e.toString())
+                  .where((p) => _preferenceOptions.contains(p)),
+            );
           } else {
             // Default preferences if none saved
             _selectedPreferences.addAll({'friendship', 'gentle animals'});
@@ -421,7 +424,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             return ChoiceChip(
                               label: Text(pref),
                               selected: isSelected,
-                              backgroundColor: Colors.white.withValues(alpha: 0.05),
+                              backgroundColor: Colors.white.withValues(
+                                alpha: 0.05,
+                              ),
                               selectedColor: const Color(0xFF8B5CF6),
                               labelStyle: TextStyle(
                                 color: isSelected
@@ -494,7 +499,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                     borderSide: BorderSide(
-                                      color: Colors.white.withValues(alpha: 0.2),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.2,
+                                      ),
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
@@ -588,7 +595,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           : ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemCount: _recentSessions.length,
-                              separatorBuilder: (_, __) => const SizedBox(width: 14),
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(width: 14),
                               itemBuilder: (context, index) {
                                 final session = _recentSessions[index];
                                 return _buildSessionCard(session);
@@ -607,36 +615,40 @@ class _HomeScreenState extends State<HomeScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        shadowColor: const Color(0xFF8B5CF6).withValues(alpha: 0.5),
+                        shadowColor: const Color(
+                          0xFF8B5CF6,
+                        ).withValues(alpha: 0.5),
                       ),
                       onPressed: _isGenerating ? null : _handleGenerate,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (_isGenerating)
-                          const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation(Colors.white),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (_isGenerating)
+                            const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation(
+                                  Colors.white,
+                                ),
+                              ),
+                            )
+                          else
+                            const Icon(Icons.auto_awesome, color: Colors.white),
+                          const SizedBox(width: 12),
+                          Text(
+                            _isGenerating
+                                ? 'Summoning your dream...'
+                                : 'Generate Nightly Story',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
                             ),
-                          )
-                        else
-                          const Icon(Icons.auto_awesome, color: Colors.white),
-                        const SizedBox(width: 12),
-                        Text(
-                          _isGenerating
-                              ? 'Summoning your dream...'
-                              : 'Generate Nightly Story',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                     ),
                   ),
                   if (_errorMessage != null) ...[
@@ -792,7 +804,10 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(height: 4),
         Text(
           subtitle,
-          style: TextStyle(color: Colors.white.withValues(alpha: 0.65), fontSize: 14),
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.65),
+            fontSize: 14,
+          ),
         ),
       ],
     );
@@ -1078,7 +1093,9 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Thumbnail or placeholder
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
               child: Container(
                 height: 90,
                 width: double.infinity,
@@ -1088,7 +1105,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         session.thumbnailUrl!,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
-                          return _buildThumbnailPlaceholder(themeData['emoji']!);
+                          return _buildThumbnailPlaceholder(
+                            themeData['emoji']!,
+                          );
                         },
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
@@ -1096,7 +1115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: CircularProgressIndicator(
                               value: loadingProgress.expectedTotalBytes != null
                                   ? loadingProgress.cumulativeBytesLoaded /
-                                      loadingProgress.expectedTotalBytes!
+                                        loadingProgress.expectedTotalBytes!
                                   : null,
                               strokeWidth: 2,
                               valueColor: const AlwaysStoppedAnimation<Color>(
@@ -1156,12 +1175,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      child: Center(
-        child: Text(
-          emoji,
-          style: const TextStyle(fontSize: 32),
-        ),
-      ),
+      child: Center(child: Text(emoji, style: const TextStyle(fontSize: 32))),
     );
   }
 
@@ -1229,15 +1243,15 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final experience = await _storyService.generateStory(request);
       if (!mounted) return;
-      
+
       // Set session ID in Sentry context if available
       if (experience.sessionId != null) {
         await SentryService.setSessionId(experience.sessionId);
       }
-      
+
       // Refresh history after generating a new story
       _loadRecentSessions();
-      
+
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -1248,10 +1262,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // Capture error in Sentry with context
       await SentryService.captureException(
         error,
-        extra: {
-          'theme': _selectedTheme,
-          'prompt': _promptCtrl.text.trim(),
-        },
+        extra: {'theme': _selectedTheme, 'prompt': _promptCtrl.text.trim()},
       );
       setState(() {
         _errorMessage = error.toString();
