@@ -17,6 +17,13 @@ frontend_flutter/android/key.properties
 # Build artifacts
 frontend_flutter/build.sh
 
+# Flutter build artifacts
+frontend_flutter/.dart_tool/
+frontend_flutter/.flutter-plugins-dependencies
+frontend_flutter/.metadata
+frontend_flutter/build/
+*.iml
+
 # OS files
 .DS_Store
 Thumbs.db
