@@ -17,10 +17,11 @@ void main() async {
         'SENTRY_DSN',
         defaultValue: '',
       );
-      
+
       if (sentryDsn.isNotEmpty) {
         options.dsn = sentryDsn;
-        options.tracesSampleRate = 0.2; // Capture 20% of transactions for performance monitoring
+        options.tracesSampleRate =
+            0.2; // Capture 20% of transactions for performance monitoring
         options.environment = const String.fromEnvironment(
           'ENVIRONMENT',
           defaultValue: 'development',
@@ -50,20 +51,14 @@ void main() async {
         );
       }
 
-      await Supabase.initialize(
-        url: supabaseUrl,
-        anonKey: supabaseAnonKey,
-      );
+      await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
 
       // Set user context from Supabase auth if available
       final authService = AuthService();
       if (authService.isLoggedIn && authService.currentUser != null) {
         final user = authService.currentUser!;
         await Sentry.configureScope((scope) {
-          scope.setUser(SentryUser(
-            id: user.id,
-            email: user.email,
-          ));
+          scope.setUser(SentryUser(id: user.id, email: user.email));
         });
       }
 
@@ -132,9 +127,9 @@ class _MyAppState extends State<MyApp> {
       ],
       builder: (context, child) {
         return MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.linear(_fontScale),
-          ),
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(_fontScale)),
           child: child!,
         );
       },
