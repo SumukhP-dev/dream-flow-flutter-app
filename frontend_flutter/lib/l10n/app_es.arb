@@ -1,0 +1,19 @@
+{
+  "@@locale": "es",
+  "appTitle": "Dream Flow",
+  "generateStory": "Generar Historia",
+  "storySeed": "Semilla de Historia",
+  "eveningProfile": "Perfil Nocturno",
+  "currentMood": "Estado de ánimo actual",
+  "nightlyRitual": "Ritual nocturno",
+  "favoriteCharacters": "Personajes favoritos (separados por comas)",
+  "calmingElements": "Elementos calmantes (separados por comas)",
+  "subscription": "Suscripción",
+  "free": "Gratis",
+  "premium": "Premium",
+  "family": "Familiar",
+  "accessibilitySettings": "Configuración de Accesibilidad",
+  "highContrastMode": "Modo de Alto Contraste",
+  "fontSize": "Tamaño de Fuente"
+}
+
