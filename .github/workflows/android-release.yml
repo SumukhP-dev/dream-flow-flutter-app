@@ -1,0 +1,103 @@
+name: Android Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      track:
+        description: 'Release track'
+        required: true
+        default: 'beta'
+        type: choice
+        options:
+          - internal
+          - beta
+          - release
+  push:
+    tags:
+      - 'android-v*'
+
+jobs:
+  release:
+    name: Android Release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+      
+      - name: Get Flutter dependencies
+        working-directory: frontend_flutter
+        run: flutter pub get
+      
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true
+      
+      - name: Install fastlane
+        working-directory: frontend_flutter/android
+        run: |
+          sudo gem install fastlane
+          bundle install || true
+      
+      - name: Setup Android Signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > frontend_flutter/android/app/keystore.jks
+            echo "storePassword=$KEYSTORE_PASSWORD" > frontend_flutter/android/key.properties
+            echo "keyPassword=$KEY_PASSWORD" >> frontend_flutter/android/key.properties
+            echo "keyAlias=$KEY_ALIAS" >> frontend_flutter/android/key.properties
+            echo "storeFile=keystore.jks" >> frontend_flutter/android/key.properties
+          fi
+      
+      - name: Build and Upload to Play Store
+        working-directory: frontend_flutter/android
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          # Create service account key file
+          if [ -n "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" ]; then
+            echo "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" > ../../fastlane-google-play-key.json
+          fi
+          
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            TRACK="${{ github.event.inputs.track }}"
+          else
+            TRACK="beta"
+          fi
+          fastlane $TRACK
+      
+      - name: Upload build artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build
+          path: frontend_flutter/build/app/outputs/**/*.{apk,aab}
+          retention-days: 7
+      
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f frontend_flutter/android/app/keystore.jks
+          rm -f frontend_flutter/android/key.properties
+          rm -f fastlane-google-play-key.json
+
