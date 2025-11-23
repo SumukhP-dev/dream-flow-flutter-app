@@ -1,0 +1,83 @@
+# Fastfile for Android
+# Documentation: https://docs.fastlane.tools/actions/
+
+default_platform(:android)
+
+platform :android do
+  desc "Build the Android app"
+  lane :build do
+    # Build Flutter app
+    sh("cd ../.. && flutter build appbundle --release")
+    
+    # The APK/AAB will be in build/app/outputs/bundle/release/app-release.aab
+    # or build/app/outputs/apk/release/app-release.apk
+  end
+
+  desc "Build and upload to Internal Testing track"
+  lane :internal do
+    # Build Flutter app
+    sh("cd ../.. && flutter build appbundle --release")
+    
+    # Upload to Internal Testing
+    upload_to_play_store(
+      track: "internal",
+      aab: "../../build/app/outputs/bundle/release/app-release.aab",
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+
+  desc "Build and upload to Beta track"
+  lane :beta do
+    # Build Flutter app
+    sh("cd ../.. && flutter build appbundle --release")
+    
+    # Upload to Beta
+    upload_to_play_store(
+      track: "beta",
+      aab: "../../build/app/outputs/bundle/release/app-release.aab",
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+
+  desc "Build and upload to Production track"
+  lane :release do
+    # Ensure we're on the main branch
+    ensure_git_branch(branch: "main")
+    
+    # Build Flutter app
+    sh("cd ../.. && flutter build appbundle --release")
+    
+    # Upload to Production
+    upload_to_play_store(
+      track: "production",
+      aab: "../../build/app/outputs/bundle/release/app-release.aab",
+      skip_upload_apk: true,
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      skip_upload_changelogs: false
+    )
+  end
+
+  desc "Build APK for testing"
+  lane :build_apk do
+    # Build Flutter app as APK
+    sh("cd ../.. && flutter build apk --release")
+    
+    # The APK will be in build/app/outputs/apk/release/app-release.apk
+  end
+
+  desc "Increment version code"
+  lane :increment_version_code do
+    # This will increment the version code in pubspec.yaml
+    # You may need to adjust this based on your versioning strategy
+    sh("cd ../.. && flutter pub version patch")
+  end
+end
+

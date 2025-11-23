@@ -1,0 +1,18 @@
+# Matchfile for iOS code signing
+# Documentation: https://docs.fastlane.tools/actions/match/
+
+git_url("https://github.com/your-org/certificates") # Replace with your certificates repo
+storage_mode("git")
+type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
+app_identifier("com.example.dreamFlow")
+username("your-apple-id@example.com") # Your Apple Developer Portal username
+
+# Optional: Specify team ID if you have multiple teams
+# team_id("YOUR_TEAM_ID")
+
+# Optional: Specify keychain name
+# keychain_name("fastlane_tmp_keychain")
+
+# Optional: Skip confirmation prompts
+# force(true)
+
