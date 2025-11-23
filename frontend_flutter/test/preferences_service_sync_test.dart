@@ -10,10 +10,8 @@ Tests ensure:
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:dream_flow/services/preferences_service.dart';
-import 'package:dream_flow/services/auth_service.dart';
 
 void main() {
   group('PreferencesService Supabase Sync', () {
@@ -30,12 +28,12 @@ void main() {
     test('saveMood syncs to Supabase when user is logged in', () async {
       // This test verifies the sync logic structure
       // In a full test, you would mock AuthService and Supabase client
-      
+
       const testMood = 'Sleepy and hopeful';
-      
+
       // Save mood
       await preferencesService.saveMood(testMood);
-      
+
       // Verify it's saved to SharedPreferences (fallback)
       final savedMood = await preferencesService.loadMood();
       expect(savedMood, testMood);
@@ -44,12 +42,12 @@ void main() {
     test('loadMood loads from Supabase when available', () async {
       // This test verifies the load logic structure
       // In a full test, you would mock Supabase to return profile data
-      
+
       const testMood = 'Calm and relaxed';
-      
+
       // Save to SharedPreferences first
       await prefs.setString('mood', testMood);
-      
+
       // Load should return the saved value
       final loadedMood = await preferencesService.loadMood();
       expect(loadedMood, testMood);
@@ -57,9 +55,9 @@ void main() {
 
     test('savePreferences syncs list to Supabase', () async {
       final testPreferences = ['friendship', 'gentle animals', 'nature'];
-      
+
       await preferencesService.savePreferences(testPreferences);
-      
+
       // Verify saved to SharedPreferences
       final loaded = await preferencesService.loadPreferences();
       expect(loaded, testPreferences);
@@ -67,57 +65,60 @@ void main() {
 
     test('loadPreferences loads from Supabase when available', () async {
       final testPreferences = ['friendship', 'gentle animals'];
-      
+
       await prefs.setStringList('preferences', testPreferences);
-      
+
       final loaded = await preferencesService.loadPreferences();
       expect(loaded, testPreferences);
     });
 
     test('saveFavoriteCharacters syncs to Supabase', () async {
       final testCharacters = ['Nova the fox', 'Orion the owl'];
-      
+
       await preferencesService.saveFavoriteCharacters(testCharacters);
-      
+
       final loaded = await preferencesService.loadFavoriteCharacters();
       expect(loaded, testCharacters);
     });
 
     test('saveCalmingElements syncs to Supabase', () async {
       final testElements = ['starlight', 'lavender mist', 'soft clouds'];
-      
+
       await preferencesService.saveCalmingElements(testElements);
-      
+
       final loaded = await preferencesService.loadCalmingElements();
       expect(loaded, testElements);
     });
 
-    test('loadProfile syncs all fields from Supabase to SharedPreferences', () async {
-      // This test verifies the sync logic in loadProfile
-      // In a full test, you would mock Supabase to return a profile
-      
-      // Set up test data in SharedPreferences
-      await prefs.setString('mood', 'Test mood');
-      await prefs.setString('ritual', 'Test routine');
-      await prefs.setStringList('preferences', ['test1', 'test2']);
-      
-      // Load profile should return data from SharedPreferences when Supabase is not available
-      final profile = await preferencesService.loadProfile();
-      
-      // When Supabase is not configured or user not logged in,
-      // it should return data from SharedPreferences
-      expect(profile, isNotNull);
-      expect(profile!['mood'], 'Test mood');
-      expect(profile['routine'], 'Test routine');
-      expect(profile['preferences'], ['test1', 'test2']);
-    });
+    test(
+      'loadProfile syncs all fields from Supabase to SharedPreferences',
+      () async {
+        // This test verifies the sync logic in loadProfile
+        // In a full test, you would mock Supabase to return a profile
+
+        // Set up test data in SharedPreferences
+        await prefs.setString('mood', 'Test mood');
+        await prefs.setString('ritual', 'Test routine');
+        await prefs.setStringList('preferences', ['test1', 'test2']);
+
+        // Load profile should return data from SharedPreferences when Supabase is not available
+        final profile = await preferencesService.loadProfile();
+
+        // When Supabase is not configured or user not logged in,
+        // it should return data from SharedPreferences
+        expect(profile, isNotNull);
+        expect(profile!['mood'], 'Test mood');
+        expect(profile['routine'], 'Test routine');
+        expect(profile['preferences'], ['test1', 'test2']);
+      },
+    );
 
     test('loadProfile returns null when no data exists', () async {
       // Clear all preferences
       await prefs.clear();
-      
+
       final profile = await preferencesService.loadProfile();
-      
+
       // Should return null when no data exists
       expect(profile, isNull);
     });
@@ -130,7 +131,7 @@ void main() {
         favoriteCharacters: ['Character1'],
         calmingElements: ['element1'],
       );
-      
+
       // Verify all fields are saved to SharedPreferences
       expect(await prefs.getString('mood'), 'Happy');
       expect(await prefs.getString('ritual'), 'Meditation');
@@ -142,10 +143,10 @@ void main() {
     test('fallback to SharedPreferences when Supabase fails', () async {
       // This test verifies that errors in Supabase don't prevent saving to SharedPreferences
       const testMood = 'Fallback mood';
-      
+
       // Save should succeed even if Supabase fails
       await preferencesService.saveMood(testMood);
-      
+
       // Should be saved to SharedPreferences
       final loaded = await preferencesService.loadMood();
       expect(loaded, testMood);
@@ -153,14 +154,14 @@ void main() {
 
     test('preferences persist across service instances', () async {
       const testMood = 'Persistent mood';
-      
+
       // Save with one instance
       await preferencesService.saveMood(testMood);
-      
+
       // Create new instance and load
       final newService = PreferencesService();
       final loaded = await newService.loadMood();
-      
+
       expect(loaded, testMood);
     });
 
@@ -171,9 +172,9 @@ void main() {
       await prefs.setStringList('preferences', ['pref1', 'pref2']);
       await prefs.setStringList('favoriteCharacters', ['char1', 'char2']);
       await prefs.setStringList('calmingElements', ['elem1', 'elem2']);
-      
+
       final profile = await preferencesService.loadProfile();
-      
+
       expect(profile, isNotNull);
       expect(profile!['mood'], 'Test mood');
       expect(profile['routine'], 'Test routine');
@@ -186,10 +187,10 @@ void main() {
       // Set initial values
       await prefs.setString('mood', 'Initial mood');
       await prefs.setString('ritual', 'Initial routine');
-      
+
       // Update only mood
       await preferencesService.saveProfile(mood: 'Updated mood');
-      
+
       // Mood should be updated
       expect(await prefs.getString('mood'), 'Updated mood');
       // Routine should remain unchanged
@@ -197,4 +198,3 @@ void main() {
     });
   });
 }
-
