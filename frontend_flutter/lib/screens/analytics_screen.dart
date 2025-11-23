@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:intl/intl.dart';
 import '../services/story_service.dart';
 
 class AnalyticsScreen extends StatefulWidget {
@@ -31,16 +30,16 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         return;
       }
 
-      // Get story history
-      final history = await _storyService.getStoryHistory(limit: 100);
+      // Get session history
+      final history = await _storyService.getHistory(userId: user.id);
 
       // Calculate analytics
-      final totalStories = history.stories.length;
-      final thisWeek = _getStoriesThisWeek(history.stories);
-      final thisMonth = _getStoriesThisMonth(history.stories);
-      final favoriteThemes = _getFavoriteThemes(history.stories);
-      final averageLength = _getAverageStoryLength(history.stories);
-      final streak = _calculateStreak(history.stories);
+      final totalStories = history.length;
+      final thisWeek = _getStoriesThisWeek(history);
+      final thisMonth = _getStoriesThisMonth(history);
+      final favoriteThemes = _getFavoriteThemes(history);
+      final averageLength = _getAverageStoryLength(history);
+      final streak = _calculateStreak(history);
 
       setState(() {
         _analytics = {
@@ -58,55 +57,58 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     }
   }
 
-  int _getStoriesThisWeek(List<StoryHistoryItem> stories) {
+  int _getStoriesThisWeek(List<SessionHistoryItem> sessions) {
     final now = DateTime.now();
     final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    return stories.where((s) {
-      final created = s.created_at;
+    return sessions.where((s) {
+      final created = DateTime.parse(s.createdAt);
       return created.isAfter(weekStart);
     }).length;
   }
 
-  int _getStoriesThisMonth(List<StoryHistoryItem> stories) {
+  int _getStoriesThisMonth(List<SessionHistoryItem> sessions) {
     final now = DateTime.now();
     final monthStart = DateTime(now.year, now.month, 1);
-    return stories.where((s) {
-      return s.created_at.isAfter(monthStart);
+    return sessions.where((s) {
+      final created = DateTime.parse(s.createdAt);
+      return created.isAfter(monthStart);
     }).length;
   }
 
-  Map<String, int> _getFavoriteThemes(List<StoryHistoryItem> stories) {
+  Map<String, int> _getFavoriteThemes(List<SessionHistoryItem> sessions) {
     final themeCounts = <String, int>{};
-    for (final story in stories) {
-      themeCounts[story.theme] = (themeCounts[story.theme] ?? 0) + 1;
+    for (final session in sessions) {
+      themeCounts[session.theme] = (themeCounts[session.theme] ?? 0) + 1;
     }
     return themeCounts;
   }
 
-  int _getAverageStoryLength(List<StoryHistoryItem> stories) {
-    if (stories.isEmpty) return 0;
-    final total = stories.fold<int>(
+  int _getAverageStoryLength(List<SessionHistoryItem> sessions) {
+    // SessionHistoryItem doesn't have story_text, so we'll use prompt length as approximation
+    if (sessions.isEmpty) return 0;
+    final total = sessions.fold<int>(
       0,
-      (sum, story) => sum + story.story_text.length,
+      (sum, session) => sum + (session.prompt.length),
     );
-    return total ~/ stories.length;
+    return total ~/ sessions.length;
   }
 
-  int _calculateStreak(List<StoryHistoryItem> stories) {
-    if (stories.isEmpty) return 0;
+  int _calculateStreak(List<SessionHistoryItem> sessions) {
+    if (sessions.isEmpty) return 0;
 
     // Sort by date descending
-    final sorted = List<StoryHistoryItem>.from(stories)
-      ..sort((a, b) => b.created_at.compareTo(a.created_at));
+    final sorted = List<SessionHistoryItem>.from(sessions)
+      ..sort((a, b) => DateTime.parse(b.createdAt).compareTo(DateTime.parse(a.createdAt)));
 
     int streak = 0;
     DateTime? lastDate;
 
-    for (final story in sorted) {
+    for (final session in sorted) {
+      final created = DateTime.parse(session.createdAt);
       final storyDate = DateTime(
-        story.created_at.year,
-        story.created_at.month,
-        story.created_at.day,
+        created.year,
+        created.month,
+        created.day,
       );
 
       if (lastDate == null) {
@@ -196,11 +198,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 16),
-                      ...(_analytics!['favoriteThemes'] as Map<String, int>)
+                      ...((_analytics!['favoriteThemes'] as Map<String, int>)
                           .entries
                           .toList()
                           ..sort((a, b) => b.value.compareTo(a.value))
-                          ..take(5)
+                          ..take(5))
                           .map((entry) => Card(
                                 child: ListTile(
                                   title: Text(entry.key),

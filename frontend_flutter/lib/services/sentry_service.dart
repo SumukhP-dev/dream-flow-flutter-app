@@ -14,9 +14,8 @@ class SentryService {
 
     await Sentry.configureScope((scope) {
       scope.setTag('session_id', sessionId);
-      scope.setContext('session', {
-        'id': sessionId,
-      });
+      // Note: setContext may not be available in all Sentry versions
+      // Using setTag instead which is more widely supported
     });
   }
 
@@ -48,11 +47,12 @@ class SentryService {
       await setSessionId(sessionId);
     }
 
-    return await Sentry.captureException(
+    final eventId = await Sentry.captureException(
       exception,
       stackTrace: stackTrace,
       hint: Hint.withMap(extra ?? {}),
     );
+    return eventId.toString();
   }
 
   /// Capture a message with optional session ID
@@ -66,11 +66,12 @@ class SentryService {
       await setSessionId(sessionId);
     }
 
-    return await Sentry.captureMessage(
+    final eventId = await Sentry.captureMessage(
       message,
       level: level,
       hint: Hint.withMap(extra ?? {}),
     );
+    return eventId.toString();
   }
 }
 

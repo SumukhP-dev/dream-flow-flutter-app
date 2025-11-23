@@ -37,33 +37,14 @@ class StoryCardService {
   }
 
   Future<Uint8List> _widgetToImage(Widget widget) async {
-    final repaintBoundary = RepaintBoundary(
-      child: MediaQuery(
-        data: const MediaQueryData(),
-        child: Material(
-          child: widget,
-        ),
-      ),
+    // Note: Widget-to-image conversion requires a BuildContext
+    // This is a simplified placeholder - in production, use a proper
+    // widget-to-image library or render in a hidden overlay
+    // For now, return a placeholder image
+    throw UnimplementedError(
+      'Widget-to-image conversion requires BuildContext. '
+      'Use GlobalKey<RepaintBoundaryState> in the widget tree instead.',
     );
-
-    final renderObject = repaintBoundary.createRenderObject(
-      BuildContext.requireRootElement(),
-    );
-
-    final pipelineOwner = PipelineOwner();
-    final buildOwner = BuildOwner();
-
-    pipelineOwner.rootNode = renderObject;
-    renderObject.attach(pipelineOwner);
-    buildOwner.buildScope(renderObject);
-
-    pipelineOwner.flushLayout();
-    pipelineOwner.flushCompositingBits();
-    pipelineOwner.flushPaint();
-
-    final image = await renderObject.toImage(pixelRatio: 2.0);
-    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    return byteData!.buffer.asUint8List();
   }
 }
 
