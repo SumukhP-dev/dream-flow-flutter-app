@@ -29,10 +29,7 @@ class SentryService {
     }
 
     await Sentry.configureScope((scope) {
-      scope.setUser(SentryUser(
-        id: user.id,
-        email: user.email,
-      ));
+      scope.setUser(SentryUser(id: user.id, email: user.email));
     });
   }
 
@@ -74,4 +71,3 @@ class SentryService {
     return eventId.toString();
   }
 }
-

@@ -287,7 +287,9 @@ class PreferencesService {
     }
     if (favoriteCharacters != null) {
       await _saveStringListToLocalStorage(
-          _keyFavoriteCharacters, favoriteCharacters);
+        _keyFavoriteCharacters,
+        favoriteCharacters,
+      );
     }
     if (calmingElements != null) {
       await _saveStringListToLocalStorage(_keyCalmingElements, calmingElements);
@@ -320,9 +322,7 @@ class PreferencesService {
         return null;
       }
 
-      if (response is Map<String, dynamic>) {
-        return response;
-      }
+      return response;
 
       try {
         final data = (response as dynamic).data;
@@ -330,7 +330,7 @@ class PreferencesService {
           return data;
         }
         if (data is Map) {
-          return Map<String, dynamic>.from(data as Map);
+          return Map<String, dynamic>.from(data);
         }
       } catch (_) {
         // Ignore conversion errors and fall through to return null
@@ -381,7 +381,9 @@ class PreferencesService {
 
   /// Save string list to SharedPreferences
   Future<void> _saveStringListToLocalStorage(
-      String key, List<String> value) async {
+    String key,
+    List<String> value,
+  ) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList(key, value);
   }
