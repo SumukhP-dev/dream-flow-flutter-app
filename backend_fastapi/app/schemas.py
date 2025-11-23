@@ -23,6 +23,7 @@ class StoryRequest(BaseModel):
     user_id: Optional[UUID] = Field(None, description="User ID for persisting the story to Supabase")
     child_mode: bool = Field(False, description="Enable child-safe content filtering")
     child_profile_id: Optional[UUID] = Field(None, description="Child profile ID for family mode")
+    language: Optional[str] = Field("en", description="Language code for story generation (e.g., 'en', 'es', 'fr')")
 
 
 class AssetUrls(BaseModel):

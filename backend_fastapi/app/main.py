@@ -1794,6 +1794,248 @@ def create_app(settings: Settings) -> FastAPI:
                 detail=f"Failed to fetch recommendations: {str(e)}",
             )
 
+    # ============================================================================
+    # Payment Webhooks
+    # ============================================================================
+
+    @app.post("/api/v1/webhooks/stripe")
+    async def stripe_webhook(request: Request, settings: Settings = Depends(get_settings)):
+        """
+        Handle Stripe webhook events for subscription updates.
+        
+        Events handled:
+        - customer.subscription.created
+        - customer.subscription.updated
+        - customer.subscription.deleted
+        - invoice.payment_succeeded
+        - invoice.payment_failed
+        """
+        if not settings.stripe_secret_key or not settings.stripe_webhook_secret:
+            raise HTTPException(
+                status_code=503,
+                detail="Stripe webhooks not configured.",
+            )
+
+        import stripe
+        stripe.api_key = settings.stripe_secret_key
+
+        payload = await request.body()
+        sig_header = request.headers.get("stripe-signature")
+
+        try:
+            event = stripe.Webhook.construct_event(
+                payload, sig_header, settings.stripe_webhook_secret
+            )
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid payload")
+        except stripe.error.SignatureVerificationError:
+            raise HTTPException(status_code=400, detail="Invalid signature")
+
+        event_type = event["type"]
+        event_data = event["data"]["object"]
+
+        try:
+            if event_type == "customer.subscription.created":
+                # New subscription created
+                customer_id = event_data.get("customer")
+                subscription_id = event_data.get("id")
+                status = event_data.get("status")
+                
+                # Find user by Stripe customer ID
+                if supabase_client and subscription_service:
+                    user_response = (
+                        supabase_client.client.table("subscriptions")
+                        .select("user_id")
+                        .eq("stripe_customer_id", customer_id)
+                        .maybe_single()
+                        .execute()
+                    )
+                    
+                    if user_response.data:
+                        user_id = UUID(user_response.data["user_id"])
+                        # Determine tier from subscription metadata or price
+                        tier = event_data.get("metadata", {}).get("tier", "premium")
+                        
+                        subscription_service.create_or_update_subscription(
+                            user_id=user_id,
+                            tier=tier,
+                            stripe_subscription_id=subscription_id,
+                            stripe_customer_id=customer_id,
+                        )
+
+            elif event_type == "customer.subscription.updated":
+                # Subscription updated (e.g., plan change, renewal)
+                subscription_id = event_data.get("id")
+                status = event_data.get("status")
+                customer_id = event_data.get("customer")
+                
+                if supabase_client and subscription_service:
+                    # Find subscription by Stripe subscription ID
+                    sub_response = (
+                        supabase_client.client.table("subscriptions")
+                        .select("user_id")
+                        .eq("stripe_subscription_id", subscription_id)
+                        .maybe_single()
+                        .execute()
+                    )
+                    
+                    if sub_response.data:
+                        user_id = UUID(sub_response.data["user_id"])
+                        tier = event_data.get("metadata", {}).get("tier", "premium")
+                        current_period_end = datetime.fromtimestamp(
+                            event_data.get("current_period_end", 0)
+                        )
+                        
+                        subscription_service.create_or_update_subscription(
+                            user_id=user_id,
+                            tier=tier,
+                            stripe_subscription_id=subscription_id,
+                            stripe_customer_id=customer_id,
+                            current_period_end=current_period_end,
+                        )
+
+            elif event_type == "customer.subscription.deleted":
+                # Subscription cancelled
+                subscription_id = event_data.get("id")
+                
+                if supabase_client and subscription_service:
+                    sub_response = (
+                        supabase_client.client.table("subscriptions")
+                        .select("user_id")
+                        .eq("stripe_subscription_id", subscription_id)
+                        .maybe_single()
+                        .execute()
+                    )
+                    
+                    if sub_response.data:
+                        user_id = UUID(sub_response.data["user_id"])
+                        subscription_service.cancel_subscription(
+                            user_id=user_id,
+                            cancel_at_period_end=False,
+                        )
+
+            return {"status": "success"}
+        except Exception as e:
+            log_event(
+                logging.ERROR,
+                "webhook.stripe.error",
+                request_id=getattr(request.state, "request_id", None),
+                event_type=event_type,
+                error=str(e),
+            )
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to process webhook: {str(e)}",
+            )
+
+    @app.post("/api/v1/webhooks/revenuecat")
+    async def revenuecat_webhook(request: Request, settings: Settings = Depends(get_settings)):
+        """
+        Handle RevenueCat webhook events for subscription updates.
+        
+        Events handled:
+        - INITIAL_PURCHASE
+        - RENEWAL
+        - CANCELLATION
+        - UNCANCELLATION
+        - BILLING_ISSUE
+        """
+        if not settings.revenuecat_api_key:
+            raise HTTPException(
+                status_code=503,
+                detail="RevenueCat webhooks not configured.",
+            )
+
+        import hmac
+        import hashlib
+        import json
+
+        payload = await request.body()
+        signature = request.headers.get("authorization", "")
+
+        # Verify webhook signature
+        expected_signature = hmac.new(
+            settings.revenuecat_api_key.encode(),
+            payload,
+            hashlib.sha256
+        ).hexdigest()
+
+        if signature != expected_signature:
+            raise HTTPException(status_code=401, detail="Invalid signature")
+
+        try:
+            event = json.loads(payload.decode())
+            event_type = event.get("event", {}).get("type")
+            event_data = event.get("event", {}).get("app_user_id")
+            product_id = event.get("event", {}).get("product_id", "")
+
+            if not supabase_client or not subscription_service:
+                return {"status": "success"}  # Acknowledge but skip processing
+
+            # Map product ID to tier
+            tier = "premium"  # Default
+            if "family" in product_id.lower():
+                tier = "family"
+            elif "premium" in product_id.lower():
+                tier = "premium"
+
+            # Find user by RevenueCat user ID
+            user_response = (
+                supabase_client.client.table("subscriptions")
+                .select("user_id")
+                .eq("revenuecat_user_id", event_data)
+                .maybe_single()
+                .execute()
+            )
+
+            if not user_response.data:
+                # User not found, skip
+                return {"status": "success"}
+
+            user_id = UUID(user_response.data["user_id"])
+
+            if event_type in ["INITIAL_PURCHASE", "RENEWAL", "UNCANCELLATION"]:
+                # Create or update subscription
+                entitlement_id = event.get("event", {}).get("entitlement_id", "")
+                
+                subscription_service.create_or_update_subscription(
+                    user_id=user_id,
+                    tier=tier,
+                    revenuecat_user_id=event_data,
+                    revenuecat_entitlement_id=entitlement_id,
+                )
+
+            elif event_type == "CANCELLATION":
+                # Cancel subscription
+                subscription_service.cancel_subscription(
+                    user_id=user_id,
+                    cancel_at_period_end=True,
+                )
+
+            elif event_type == "BILLING_ISSUE":
+                # Mark subscription as past_due
+                # This would require updating the subscription status
+                # For now, just log it
+                log_event(
+                    logging.WARNING,
+                    "webhook.revenuecat.billing_issue",
+                    request_id=getattr(request.state, "request_id", None),
+                    user_id=str(user_id),
+                )
+
+            return {"status": "success"}
+        except Exception as e:
+            log_event(
+                logging.ERROR,
+                "webhook.revenuecat.error",
+                request_id=getattr(request.state, "request_id", None),
+                error=str(e),
+            )
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to process webhook: {str(e)}",
+            )
+
     return app
 
 

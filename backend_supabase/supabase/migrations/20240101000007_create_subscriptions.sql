@@ -113,10 +113,10 @@ BEGIN
     v_tier := get_user_subscription_tier(p_user_id);
     
     CASE v_tier
-        WHEN 'free' THEN RETURN 3;  -- 3 stories per week
+        WHEN 'free' THEN RETURN 7;  -- 7 stories per week
         WHEN 'premium' THEN RETURN 999999;  -- Unlimited
         WHEN 'family' THEN RETURN 999999;  -- Unlimited
-        ELSE RETURN 3;
+        ELSE RETURN 7;
     END CASE;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

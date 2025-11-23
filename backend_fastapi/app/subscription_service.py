@@ -73,12 +73,12 @@ class SubscriptionService:
             user_id: UUID of the user
 
         Returns:
-            Quota limit (3 for free, 999999 for premium/family)
+            Quota limit (7 for free, 999999 for premium/family)
         """
         tier = self.get_user_tier(user_id)
         if tier in ("premium", "family"):
             return 999999  # Unlimited
-        return 3  # Free tier: 3 stories per week
+        return 7  # Free tier: 7 stories per week
 
     def get_user_story_count(self, user_id: UUID, period_type: str = "weekly") -> int:
         """
