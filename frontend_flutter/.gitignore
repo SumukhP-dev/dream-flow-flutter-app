@@ -1,0 +1,16 @@
+# Fastlane
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots
+**/fastlane/test_output
+**/fastlane/.env
+
+# iOS
+ios/fastlane/Appfile.local
+
+# Android
+android/fastlane/Appfile.local
+
+# Google Play Service Account Key (should be in secrets)
+fastlane-google-play-key.json
+**/fastlane-google-play-key.json
