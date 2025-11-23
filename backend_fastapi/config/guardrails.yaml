@@ -1,0 +1,28 @@
+defaults:
+  banned_terms:
+    - violence
+    - blood
+    - weapon
+    - scream
+    - monster
+    - kill
+    - death
+    - nightmare
+  tone_thresholds:
+    max_exclamation_points: 6
+    max_all_caps_chunks: 5
+
+profiles:
+  anxious:
+    banned_terms:
+      - chase
+      - thunder
+      - tornado
+    tone_thresholds:
+      max_exclamation_points: 3
+      max_all_caps_chunks: 2
+  adventurous:
+    tone_thresholds:
+      max_exclamation_points: 8
+      max_all_caps_chunks: 6
+
