@@ -1,0 +1,291 @@
+Issue Type,Summary,Description,Priority,Status,Components,Labels,Story Points,Epic Link
+Story,Implement Subscription System with Stripe and RevenueCat,"As a product owner, I want to implement a subscription system so that we can monetize the app and compete with funded competitors.
+
+Acceptance Criteria:
+- Support Free tier (3 stories/week), Premium ($12/mo unlimited), Family ($18/mo, 5 users)
+- Integrate Stripe for web payments and RevenueCat for mobile (iOS/Android in-app purchases)
+- Add subscription status checks to story generation endpoint
+- Implement usage quotas and rate limiting per tier
+- Add subscription management UI (upgrade, cancel, restore purchases)
+- Track daily/weekly story generation counts per user
+- Enforce limits based on subscription tier
+- Add graceful upgrade prompts when limits reached
+
+Technical Implementation:
+- Created database migration: 20240101000007_create_subscriptions.sql
+- Created SubscriptionService: backend_fastapi/app/subscription_service.py
+- Created Flutter subscription service: frontend_flutter/lib/services/subscription_service.dart
+- Created subscription screen: frontend_flutter/lib/screens/subscription_screen.dart
+- Added subscription endpoints: GET /api/v1/subscription, GET /api/v1/subscription/quota, POST /api/v1/subscription, POST /api/v1/subscription/cancel
+- Integrated quota checks into story generation endpoint",High,Done,Backend;Frontend;Database,subscription;monetization;stripe;revenuecat,8,Production-Ready Features
+Story,Implement Push Notifications System,"As a product owner, I want to implement push notifications so that we can improve user engagement and retention.
+
+Acceptance Criteria:
+- Integrate Firebase Cloud Messaging (FCM) for Android, APNs for iOS
+- Send bedtime reminders based on user's routine time
+- Streak maintenance notifications (""Don't break your 7-day streak!"")
+- New theme/story recommendations
+- Weekly progress summaries
+- User preference management for notification types
+
+Technical Implementation:
+- Created database migration: 20240101000008_create_notification_tokens.sql
+- Created NotificationService: backend_fastapi/app/notification_service.py
+- Created Flutter notification service: frontend_flutter/lib/services/notification_service.dart
+- Added notification endpoints: POST /api/v1/notifications/register, GET /api/v1/notifications/preferences, PUT /api/v1/notifications/preferences
+- Support for token registration and preference management",High,Done,Backend;Frontend;Database,notifications;engagement;retention;fcm;apns,5,Production-Ready Features
+Story,Implement Family/Child Mode with Age-Appropriate Content Filters,"As a parent, I want to create child profiles with age-appropriate content filters so that my children can safely enjoy bedtime stories.
+
+Acceptance Criteria:
+- Separate child profiles with age-appropriate content filters
+- Co-view mode for parents and children
+- Enhanced guardrails for child safety
+- Kid-friendly themes and characters
+- Content filter levels: strict (age <5), standard (age 5-9), relaxed (age 10+)
+- Screen-time guilt-free positioning
+
+Technical Implementation:
+- Created database migration: 20240101000009_create_family_profiles.sql
+- Enhanced guardrails.py with child_mode support and content_filter_level parameter
+- Added child_mode and child_profile_id fields to StoryRequest schema
+- Integrated child-safe content filtering into story generation endpoint
+- Created family_profiles and family_sessions tables with RLS policies",High,Done,Backend;Database;Content Safety,family-mode;child-safety;content-filtering;guardrails,8,Production-Ready Features
+Story,Implement Personalization Engine Based on User Feedback,"As a user, I want personalized story recommendations so that I can discover themes I'll enjoy based on my past feedback.
+
+Acceptance Criteria:
+- Analyze user feedback (ratings, mood_delta) to learn preferences
+- Recommend themes based on time of day, mood, and past favorites
+- ""Continue your journey"" - suggest similar stories to favorites
+- Seasonal/personalized story suggestions
+- Score-based ranking of recommendations
+
+Technical Implementation:
+- Created RecommendationEngine: backend_fastapi/app/recommendation_engine.py
+- Added recommendation endpoint: GET /api/v1/recommendations
+- Implemented feedback-based learning algorithm
+- Support for time-of-day aware recommendations
+- Similar story suggestions based on favorite themes",Medium,Done,Backend;ML,personalization;recommendations;ml;feedback,5,Production-Ready Features
+Task,Add CDN Configuration for Asset Delivery,"As a developer, I want CDN configuration so that we can optimize video/audio delivery in the future.
+
+Acceptance Criteria:
+- Add CDN URL and enabled settings to config
+- Prepare for Cloudflare or AWS CloudFront integration
+- Support for progressive video loading
+- Quality selection based on connection
+
+Technical Implementation:
+- Added cdn_url and cdn_enabled settings to backend_fastapi/app/config.py
+- Configuration ready for future CDN integration in services.py",Medium,Done,Backend;Infrastructure,cdn;performance;optimization,3,Production-Ready Features
+Task,Create Subscription Database Schema and Migrations,"As a developer, I want subscription database tables so that we can track user subscriptions and usage.
+
+Acceptance Criteria:
+- Create subscriptions table with tier, status, Stripe/RevenueCat IDs
+- Create usage_tracking table for quota enforcement
+- Add RLS policies for data security
+- Create helper functions for quota management
+- Support for Free, Premium, and Family tiers
+
+Technical Implementation:
+- Migration: 20240101000007_create_subscriptions.sql
+- Tables: subscriptions, usage_tracking
+- Functions: get_user_subscription_tier, get_user_story_quota, get_user_story_count, increment_story_count
+- Indexes for performance optimization",High,Done,Database,subscription;database;migration,3,Production-Ready Features
+Task,Create Notification Database Schema and Migrations,"As a developer, I want notification database tables so that we can manage push notification tokens and preferences.
+
+Acceptance Criteria:
+- Create notification_tokens table for FCM and APNs tokens
+- Create notification_preferences table for user settings
+- Add RLS policies for data security
+- Support for bedtime reminders, streak notifications, recommendations, weekly summaries
+
+Technical Implementation:
+- Migration: 20240101000008_create_notification_tokens.sql
+- Tables: notification_tokens, notification_preferences
+- Support for multiple platforms (android, ios, web)
+- Preference management for all notification types",High,Done,Database,notifications;database;migration,3,Production-Ready Features
+Task,Create Family Mode Database Schema and Migrations,"As a developer, I want family mode database tables so that we can support child profiles and co-view sessions.
+
+Acceptance Criteria:
+- Create family_profiles table for child profiles
+- Create family_sessions table for co-view tracking
+- Add RLS policies for data security
+- Support for age-based content filtering
+- Content filter level based on age
+
+Technical Implementation:
+- Migration: 20240101000009_create_family_profiles.sql
+- Tables: family_profiles, family_sessions
+- Function: get_content_filter_level based on age
+- Indexes for performance optimization",High,Done,Database,family-mode;database;migration,3,Production-Ready Features
+Task,Implement Subscription Service with Quota Enforcement,"As a developer, I want a subscription service so that we can manage subscriptions and enforce usage quotas.
+
+Acceptance Criteria:
+- Get user subscription tier and quota
+- Check if user can generate story based on quota
+- Increment story count after generation
+- Create/update subscriptions
+- Cancel subscriptions
+- Support for Free (3/week), Premium (unlimited), Family (unlimited)
+
+Technical Implementation:
+- Service: backend_fastapi/app/subscription_service.py
+- Methods: get_user_tier, get_user_quota, can_generate_story, increment_story_count
+- Integration with story generation endpoint for quota checks",High,Done,Backend,subscription;quota;backend,5,Production-Ready Features
+Task,Implement Notification Service for Push Notifications,"As a developer, I want a notification service so that we can manage push notification tokens and preferences.
+
+Acceptance Criteria:
+- Register notification tokens (FCM, APNs)
+- Get user notification preferences
+- Update notification preferences
+- Get users for bedtime reminders
+- Get users with active streaks for notifications
+
+Technical Implementation:
+- Service: backend_fastapi/app/notification_service.py
+- Methods: register_token, get_notification_preferences, update_notification_preferences
+- Support for bedtime reminders, streak notifications, recommendations, weekly summaries",High,Done,Backend,notifications;backend;push-notifications,5,Production-Ready Features
+Task,Implement Recommendation Engine for Personalization,"As a developer, I want a recommendation engine so that we can provide personalized theme recommendations.
+
+Acceptance Criteria:
+- Analyze user feedback history to determine preferences
+- Calculate theme scores based on ratings and mood_delta
+- Recommend themes based on positive feedback
+- Support time-of-day aware recommendations
+- Suggest similar stories to favorites
+
+Technical Implementation:
+- Service: backend_fastapi/app/recommendation_engine.py
+- Methods: get_recommended_themes, get_similar_stories
+- Feedback-based learning algorithm
+- Score-based ranking system",Medium,Done,Backend;ML,recommendations;personalization;ml,5,Production-Ready Features
+Task,Enhance Guardrails for Child-Safe Content Filtering,"As a developer, I want enhanced guardrails so that we can provide age-appropriate content for children.
+
+Acceptance Criteria:
+- Support child_mode parameter in guardrail checks
+- Apply stricter filters for child mode (strict, standard, relaxed)
+- Additional banned terms for strict child mode
+- Reduced tone thresholds for children
+- Age-based content filter level determination
+
+Technical Implementation:
+- Enhanced ContentGuard.check_story() method
+- Added child_mode and content_filter_level parameters
+- Stricter banned terms for strict mode (scary, frightening, dark, shadow, loud, angry, fight, battle)
+- Reduced exclamation point and caps limits for children",High,Done,Backend;Content Safety,guardrails;child-safety;content-filtering,5,Production-Ready Features
+Task,Create Flutter Subscription Service and UI,"As a developer, I want Flutter subscription service and UI so that users can manage their subscriptions.
+
+Acceptance Criteria:
+- Get user subscription and usage quota
+- Create/update subscriptions
+- Cancel subscriptions
+- Display subscription tier and status
+- Show usage quota and remaining stories
+- Subscription management screen with tier comparison
+
+Technical Implementation:
+- Service: frontend_flutter/lib/services/subscription_service.dart
+- Screen: frontend_flutter/lib/screens/subscription_screen.dart
+- Models: Subscription, UsageQuota
+- UI with tier cards, usage display, upgrade/cancel buttons",High,Done,Frontend,subscription;flutter;ui,8,Production-Ready Features
+Task,Create Flutter Notification Service,"As a developer, I want Flutter notification service so that we can register tokens and manage preferences.
+
+Acceptance Criteria:
+- Register notification token with backend
+- Get notification preferences
+- Update notification preferences
+- Support for Android, iOS, and Web platforms
+
+Technical Implementation:
+- Service: frontend_flutter/lib/services/notification_service.dart
+- Models: NotificationPreferences
+- Platform detection (Android, iOS, Web)
+- Token registration and preference management",High,Done,Frontend,notifications;flutter,5,Production-Ready Features
+Task,Add Subscription API Endpoints,"As a developer, I want subscription API endpoints so that the frontend can manage subscriptions.
+
+Acceptance Criteria:
+- GET /api/v1/subscription - Get user subscription
+- GET /api/v1/subscription/quota - Get usage quota
+- POST /api/v1/subscription - Create/update subscription
+- POST /api/v1/subscription/cancel - Cancel subscription
+- Proper authentication and error handling
+
+Technical Implementation:
+- Added endpoints to backend_fastapi/app/main.py
+- Integration with SubscriptionService
+- JWT authentication required
+- Proper error handling and logging",High,Done,Backend;API,subscription;api;endpoints,3,Production-Ready Features
+Task,Add Notification API Endpoints,"As a developer, I want notification API endpoints so that the frontend can manage notifications.
+
+Acceptance Criteria:
+- POST /api/v1/notifications/register - Register notification token
+- GET /api/v1/notifications/preferences - Get notification preferences
+- PUT /api/v1/notifications/preferences - Update notification preferences
+- Proper authentication and error handling
+
+Technical Implementation:
+- Added endpoints to backend_fastapi/app/main.py
+- Integration with NotificationService
+- JWT authentication required
+- Proper error handling and logging",High,Done,Backend;API,notifications;api;endpoints,3,Production-Ready Features
+Task,Add Recommendation API Endpoint,"As a developer, I want a recommendation API endpoint so that the frontend can get personalized recommendations.
+
+Acceptance Criteria:
+- GET /api/v1/recommendations - Get personalized theme recommendations
+- Support for limit and time_of_day parameters
+- Return recommendations with scores and reasons
+- Proper authentication and error handling
+
+Technical Implementation:
+- Added endpoint to backend_fastapi/app/main.py
+- Integration with RecommendationEngine
+- JWT authentication required
+- Proper error handling and logging",Medium,Done,Backend;API,recommendations;api;endpoints,3,Production-Ready Features
+Task,Integrate Subscription Quota Checks into Story Generation,"As a developer, I want quota checks in story generation so that we can enforce subscription limits.
+
+Acceptance Criteria:
+- Check subscription quota before story generation
+- Return 429 error with upgrade prompt if quota exceeded
+- Increment usage count after successful generation
+- Support for Free, Premium, and Family tiers
+
+Technical Implementation:
+- Modified generate_story endpoint in backend_fastapi/app/main.py
+- Added quota check before story generation
+- Increment usage count after successful generation
+- Graceful error handling with upgrade prompts",High,Done,Backend,subscription;quota;story-generation,5,Production-Ready Features
+Task,Integrate Child Mode into Story Generation,"As a developer, I want child mode support in story generation so that we can provide age-appropriate content.
+
+Acceptance Criteria:
+- Support child_mode flag in StoryRequest
+- Fetch child profile to get content_filter_level
+- Apply enhanced guardrails for child-safe content
+- Track co-view sessions for family mode
+
+Technical Implementation:
+- Modified StoryRequest schema with child_mode and child_profile_id
+- Enhanced guardrail checks with child_mode support
+- Fetch child profile in story generation endpoint
+- Apply appropriate content filter level",High,Done,Backend;Content Safety,family-mode;child-safety;story-generation,5,Production-Ready Features
+Task,Add Subscription Configuration Settings,"As a developer, I want subscription configuration settings so that we can integrate with Stripe and RevenueCat.
+
+Acceptance Criteria:
+- Add Stripe secret key and webhook secret to config
+- Add RevenueCat API key to config
+- Support for environment variable configuration
+
+Technical Implementation:
+- Added settings to backend_fastapi/app/config.py
+- stripe_secret_key, stripe_webhook_secret, revenuecat_api_key
+- Environment variable support",Medium,Done,Backend;Configuration,subscription;configuration;stripe;revenuecat,2,Production-Ready Features
+Task,Add CDN Configuration Settings,"As a developer, I want CDN configuration settings so that we can optimize asset delivery in the future.
+
+Acceptance Criteria:
+- Add CDN URL and enabled flag to config
+- Support for environment variable configuration
+- Prepare for Cloudflare or AWS CloudFront integration
+
+Technical Implementation:
+- Added settings to backend_fastapi/app/config.py
+- cdn_url, cdn_enabled
+- Environment variable support",Medium,Done,Backend;Configuration,cdn;configuration;performance,2,Production-Ready Features
+
