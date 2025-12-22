@@ -22,6 +22,15 @@ frontend_flutter/.dart_tool/
 frontend_flutter/.flutter-plugins-dependencies
 frontend_flutter/.metadata
 frontend_flutter/build/
+frontend_flutter/android/build/
+dream-flow-app/app/.dart_tool/
+dream-flow-app/app/android/
+dream-flow-app/app/build/
+dream-flow-app/website/.next/
+dream-flow-app/website/node_modules/
+node_modules/
+packages/*/node_modules/
+backend_fastapi/models/*.gguf
 *.iml
 
 # OS files
@@ -34,3 +43,5 @@ Thumbs.db
 *.swp
 *.swo
 
+.env
+dream-flow-app/app/.env.local
