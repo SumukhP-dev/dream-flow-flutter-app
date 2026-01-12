@@ -1,0 +1,188 @@
+{
+  "@@locale": "ja",
+  "appTitle": "Dream Flow",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "welcome": "ようこそ",
+  "@welcome": {
+    "description": "Welcome message"
+  },
+  "generateStory": "お話を作る",
+  "@generateStory": {
+    "description": "Button to generate a story"
+  },
+  "bedtimeStory": "寝る前のお話",
+  "@bedtimeStory": {
+    "description": "Bedtime story label"
+  },
+  "myStories": "私のお話",
+  "@myStories": {
+    "description": "My stories section"
+  },
+  "settings": "設定",
+  "@settings": {
+    "description": "Settings label"
+  },
+  "login": "ログイン",
+  "@login": {
+    "description": "Login button"
+  },
+  "signup": "登録",
+  "@signup": {
+    "description": "Sign up button"
+  },
+  "logout": "ログアウト",
+  "@logout": {
+    "description": "Logout button"
+  },
+  "home": "ホーム",
+  "@home": {
+    "description": "Home label"
+  },
+  "profile": "プロフィール",
+  "@profile": {
+    "description": "Profile label"
+  },
+  "subscription": "サブスクリプション",
+  "@subscription": {
+    "description": "Subscription label"
+  },
+  "free": "無料",
+  "@free": {
+    "description": "Free tier label"
+  },
+  "premium": "プレミアム",
+  "@premium": {
+    "description": "Premium tier label"
+  },
+  "family": "ファミリー",
+  "@family": {
+    "description": "Family tier label"
+  },
+  "loading": "読み込み中...",
+  "@loading": {
+    "description": "Loading message"
+  },
+  "error": "エラー",
+  "@error": {
+    "description": "Error label"
+  },
+  "retry": "再試行",
+  "@retry": {
+    "description": "Retry button"
+  },
+  "cancel": "キャンセル",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  "save": "保存",
+  "@save": {
+    "description": "Save button"
+  },
+  "delete": "削除",
+  "@delete": {
+    "description": "Delete button"
+  },
+  "edit": "編集",
+  "@edit": {
+    "description": "Edit button"
+  },
+  "play": "再生",
+  "@play": {
+    "description": "Play button"
+  },
+  "pause": "一時停止",
+  "@pause": {
+    "description": "Pause button"
+  },
+  "stop": "停止",
+  "@stop": {
+    "description": "Stop button"
+  },
+  "share": "共有",
+  "@share": {
+    "description": "Share button"
+  },
+  "favorite": "お気に入り",
+  "@favorite": {
+    "description": "Favorite button"
+  },
+  "theme": "テーマ",
+  "@theme": {
+    "description": "Theme label"
+  },
+  "prompt": "プロンプト",
+  "@prompt": {
+    "description": "Prompt input label"
+  },
+  "mood": "気分",
+  "@mood": {
+    "description": "Mood label"
+  },
+  "routine": "ルーティン",
+  "@routine": {
+    "description": "Routine label"
+  },
+  "preferences": "好み",
+  "@preferences": {
+    "description": "Preferences label"
+  },
+  "favoriteCharacters": "好きなキャラクター",
+  "@favoriteCharacters": {
+    "description": "Favorite characters label"
+  },
+  "calmingElements": "落ち着く要素",
+  "@calmingElements": {
+    "description": "Calming elements label"
+  },
+  "parentDashboard": "保護者ダッシュボード",
+  "@parentDashboard": {
+    "description": "Parent dashboard title"
+  },
+  "childProfiles": "子供のプロフィール",
+  "@childProfiles": {
+    "description": "Child profiles label"
+  },
+  "addChild": "子供を追加",
+  "@addChild": {
+    "description": "Add child button"
+  },
+  "bedtimeSchedule": "就寝時間",
+  "@bedtimeSchedule": {
+    "description": "Bedtime schedule label"
+  },
+  "screenTime": "スクリーンタイム",
+  "@screenTime": {
+    "description": "Screen time label"
+  },
+  "contentReview": "コンテンツレビュー",
+  "@contentReview": {
+    "description": "Content review label"
+  },
+  "usageReports": "使用レポート",
+  "@usageReports": {
+    "description": "Usage reports label"
+  },
+  "achievements": "実績",
+  "@achievements": {
+    "description": "Achievements label"
+  },
+  "streak": "連続",
+  "@streak": {
+    "description": "Streak label"
+  },
+  "days": "日",
+  "@days": {
+    "description": "Days label"
+  },
+  "storyCollection": "お話コレクション",
+  "@storyCollection": {
+    "description": "Story collection label"
+  },
+  "myFavorites": "お気に入り",
+  "@myFavorites": {
+    "description": "My favorites label"
+  }
+}
+

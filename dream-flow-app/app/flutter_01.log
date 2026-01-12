@@ -1,0 +1,68 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter run -d 35221JEGR17301 --dart-define=BACKEND_URL=http://localhost:8080
+
+## exception
+
+FileSystemException: FileSystemException: readInto failed, path = 'C:\Users\sumuk\OneDrive - Georgia Institute of Technology\Projects\Dream_Flow_Flutter_App\dream-flow-app\app\.dart_tool\dartpad\web_plugin_registrant.dart' (OS Error: The cloud operation was not completed before the time-out period expired.
+, errno = 426)
+
+```
+#0      _checkForErrorResponse (dart:io/common.dart:58:9)
+#1      _RandomAccessFile.readInto.<anonymous closure> (dart:io/file_impl.dart:928:7)
+#2      _rootRunUnary (dart:async/zone.dart:1538:47)
+#3      _CustomZone.runUnary (dart:async/zone.dart:1429:19)
+<asynchronous suspension>
+#4      _File.readAsBytes.readSized.read.<anonymous closure> (dart:io/file_impl.dart:629:78)
+<asynchronous suspension>
+```
+
+## flutter doctor
+
+```
+[✓] Flutter (Channel stable, 3.35.7, on Microsoft Windows [Version 10.0.26200.7462], locale en-US) [1,787ms]
+    • Flutter version 3.35.7 on channel stable at C:\Users\sumuk\Documents - Copy\flutter
+    • Upstream repository https://github.com/flutter/flutter.git
+    • Framework revision adc9010625 (10 weeks ago), 2025-10-21 14:16:03 -0400
+    • Engine revision 035316565a
+    • Dart version 3.9.2
+    • DevTools version 2.48.0
+    • Feature flags: enable-web, enable-linux-desktop, enable-macos-desktop, enable-windows-desktop, enable-android, enable-ios, cli-animations, enable-lldb-debugging
+
+[✓] Windows Version (Windows 11 or higher, 25H2, 2009) [3.0s]
+
+[!] Android toolchain - develop for Android devices (Android SDK version 36.0.0) [8.9s]
+    • Android SDK at C:\Users\sumuk\AppData\Local\Android\sdk
+    • Emulator version 35.5.10.0 (build_id 13402964) (CL:N/A)
+    • Platform android-36, build-tools 36.0.0
+    • Java binary at: C:\Program Files\Java\jdk-24\bin\java
+      This JDK is specified by the JAVA_HOME environment variable.
+      To manually set the JDK path, use: `flutter config --jdk-dir="path/to/jdk"`.
+    • Java version Java(TM) SE Runtime Environment (build 24.0.2+12-54)
+    ! Some Android licenses not accepted. To resolve this, run: flutter doctor --android-licenses
+
+[✓] Chrome - develop for the web [626ms]
+    • Chrome at C:\Program Files\Google\Chrome\Application\chrome.exe
+
+[✓] Visual Studio - develop Windows apps (Visual Studio Community 2022 17.14.16) [624ms]
+    • Visual Studio at C:\Program Files\Microsoft Visual Studio\2022\Community
+    • Visual Studio Community 2022 version 17.14.36518.9
+    • Windows 10 SDK version 10.0.26100.0
+
+[!] Android Studio (not installed) [28ms]
+    • Android Studio not found; download from https://developer.android.com/studio/index.html
+      (or visit https://flutter.dev/to/windows-android-setup for detailed instructions).
+
+[✓] Connected device (3 available) [463ms]
+    • Windows (desktop) • windows • windows-x64    • Microsoft Windows [Version 10.0.26200.7462]
+    • Chrome (web)      • chrome  • web-javascript • Google Chrome 143.0.7499.170
+    • Edge (web)        • edge    • web-javascript • Microsoft Edge 143.0.3650.96
+
+[✓] Network resources [347ms]
+    • All expected network resources are available.
+
+! Doctor found issues in 2 categories.
+```

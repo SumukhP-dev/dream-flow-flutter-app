@@ -1,0 +1,312 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter run -d chrome
+
+## exception
+
+DartDevelopmentServiceException: DartDevelopmentServiceException: Failed to start Dart Development Service
+
+```
+```
+
+## flutter doctor
+
+```
+[32m[✓][39m Flutter
+    (Channel
+    stable,
+    3.35.7, on
+    Microsoft
+    Windows
+    [Version
+    10.0.26200
+    .7462],
+    locale
+    en-US)
+    [578ms]
+    [32m•[39m Flutter
+    version
+    3.35.7 on
+    channel
+    stable at
+    C:\Users\s
+    umuk\Docum
+    ents -
+    Copy\flutt
+    er
+    [32m•[39m Upstream
+    repository
+    https://gi
+    thub.com/f
+    lutter/flu
+    tter.git
+    [32m•
+    [39m Framework
+    revision
+    adc9010625
+    (3 months
+    ago),
+    2025-10-21
+    14:16:03
+    -0400
+    [32m•[39m Engine
+    revision
+    035316565a
+    [32m•[39m Dart
+    version
+    3.9.2
+    [32m•[39m DevTools
+    version
+    2.48.0
+    [32m•[39m Feature
+    flags:
+    enable-web
+    ,
+    enable-lin
+    ux-desktop
+    ,
+    enable-mac
+    os-desktop
+    ,
+    enable-win
+    dows-deskt
+    op,
+    enable-and
+    roid,
+    enable-ios
+    ,
+    cli-animat
+    ions,
+    enable-lld
+    b-debuggin
+    g
+
+[32m[✓][39m Windows
+    Version
+    (Windows
+    11 or
+    higher,
+    25H2,
+    2009)
+    [1,782ms]
+
+[33m[!][39m Android
+    toolchain
+    - develop
+    for
+    Android
+    devices
+    (Android
+    SDK
+    version
+    36.0.0)
+    [4.3s]
+    [32m•[39m Android
+    SDK at
+    C:\Users\s
+    umuk\AppDa
+    ta\Local\A
+    ndroid\sdk
+    [32m•[39m Emulator
+    version
+    36.3.10.0
+    (build_id
+    14472402)
+    (CL:N/A)
+    [32m•[39m Platform
+    android-36
+    ,
+    build-tool
+    s 36.0.0
+    [32m•[39m Java
+    binary at:
+    C:\Program
+    Files\Andr
+    oid\Androi
+    d
+    Studio\jbr
+    \bin\java
+    This is
+    the JDK
+    bundled
+    with the
+    latest
+    Android
+    Studio
+    installati
+    on on this
+    machine.
+    To
+    manually
+    set the
+    JDK path,
+    use:
+    `flutter
+    config
+    --jdk-dir=
+    "path/to/j
+    dk"`.
+    [32m•[39m Java
+    version
+    OpenJDK
+    Runtime
+    Environmen
+    t (build
+    21.0.8+-14
+    196175-b10
+    38.72)
+    [33m![39m Some
+    Android
+    licenses
+    not
+    accepted.
+    To resolve
+    this, run:
+    flutter
+    doctor
+    --android-
+    licenses
+
+[32m[✓][39m Chrome -
+    develop
+    for the
+    web
+    [244ms]
+    [32m•[39m Chrome
+    at
+    C:\Program
+    Files\Goog
+    le\Chrome\
+    Applicatio
+    n\chrome.e
+    xe
+
+[32m[✓][39m Visual
+    Studio -
+    develop
+    Windows
+    apps
+    (Visual
+    Studio
+    Community
+    2022
+    17.14.16)
+    [243ms]
+    [32m•[39m Visual
+    Studio at
+    C:\Program
+    Files\Micr
+    osoft
+    Visual
+    Studio\202
+    2\Communit
+    y
+    [32m•[39m Visual
+    Studio
+    Community
+    2022
+    version
+    17.14.3651
+    8.9
+    [32m•[39m Windows
+    10 SDK
+    version
+    10.0.26100
+    .0
+
+[32m[✓][39m Android
+    Studio
+    (version
+    2025.2.2)
+    [9ms]
+    [32m•[39m Android
+    Studio at
+    C:\Program
+    Files\Andr
+    oid\Androi
+    d Studio
+    [32m•[39m Flutter
+    plugin can
+    be
+    installed
+    from:
+    🔨
+    https://pl
+    ugins.jetb
+    rains.com/
+    plugin/921
+    2-flutter
+    [32m•[39m Dart
+    plugin can
+    be
+    installed
+    from:
+    🔨
+    https://pl
+    ugins.jetb
+    rains.com/
+    plugin/635
+    1-dart
+    [32m•[39m Java
+    version
+    OpenJDK
+    Runtime
+    Environmen
+    t (build
+    21.0.8+-14
+    196175-b10
+    38.72)
+
+[32m[✓][39m Connected
+    device (3
+    available)
+    [203ms]
+    [32m•[39m Windows
+    (desktop)
+    • windows
+    •
+    windows-x6
+    4    •
+    Microsoft
+    Windows
+    [Version
+    10.0.26200
+    .7462]
+    [32m•[39m Chrome
+    (web)
+    • chrome
+    •
+    web-javasc
+    ript •
+    Google
+    Chrome
+    143.0.7499
+    .170
+    [32m•[39m Edge
+    (web)
+    • edge
+    •
+    web-javasc
+    ript •
+    Microsoft
+    Edge
+    143.0.3650
+    .96
+
+[32m[✓][39m Network
+    resources
+    [378ms]
+    [32m•[39m All
+    expected
+    network
+    resources
+    are
+    available.
+
+[33m![39m Doctor found
+  issues in 1
+  category.
+```

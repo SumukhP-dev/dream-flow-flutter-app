@@ -1,0 +1,49 @@
+﻿node.exe : Stopped 
+services: [supabase_i
+mgproxy_backend_supab
+ase supabase_edge_run
+time_backend_supabase
+ supabase_pooler_back
+end_supabase]
+At C:\Program Files\n
+odejs\npx.ps1:29 
+char:3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (Stopped   
+  service...ckend    
+_supabase]:Strin    
+g) [], RemoteExc    
+eption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+supabase local 
+development setup is 
+running.
+
+笊ｭ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏 笊ｮ
+笏・肌 Development Tools                  笏・笏懌楳笏笏笏 笏ｬ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏､
+笏・Studio  笏・http://127.0.0.1:54323     笏・笏・Mailpit 笏・http://127.0.0.1:54324     笏・笏・MCP     笏・http://127.0.0.1:54321/mcp 笏・笊ｰ笏笏笏笏 笏ｴ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笊ｯ
+
+笊ｭ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笊ｮ
+笏・倹 APIs                                          笏・笏懌楳笏笏笏笏笏 笏ｬ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏 笏､
+笏・Project URL 笏・http://127.0.0.1:54321            笏・笏・REST        笏・http://127.0.0.1:54321/rest/v1    笏・笏・GraphQL     笏・http://127.0.0.1:54321/graphql/v1 笏・笊ｰ笏笏笏笏笏笏 笏ｴ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏 笊ｯ
+
+笊ｭ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笊ｮ
+笏・笵・Database                                                     笏・笏懌楳笏 笏ｬ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏 笏､
+笏・URL 笏・postgresql://postgres:postgres@127.0.0.1:54322/postgres 笏・笊ｰ笏笏 笏ｴ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏 笊ｯ
+
+笊ｭ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏 笊ｮ
+笏・泊 Authentication Keys                                        笏・笏懌楳笏笏笏笏笏 笏ｬ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏､
+笏・Publishable 笏・sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH 笏・笏・Secret      笏・sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz      笏・笊ｰ笏笏笏笏笏笏 笏ｴ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笊ｯ
+
+笊ｭ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笊ｮ
+笏・逃 Storage (S3)                                                                笏・笏懌楳笏笏笏笏笏笏ｬ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏､
+笏・URL        笏・http://127.0.0.1:54321/storage/v1/s3                             笏・笏・Access Key 笏・625729a08b95bf1b7ff351a663f3a23c                                 笏・笏・Secret Key 笏・850181e4652dd023b7a98c58ae0d2d34bd487ee0cc3254aed6eda37307425907 笏・笏・Region     笏・local                                                            笏・笊ｰ笏笏笏笏笏笏笏ｴ笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笊ｯ
+

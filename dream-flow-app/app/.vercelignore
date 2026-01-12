@@ -1,0 +1,35 @@
+# Flutter build artifacts
+.dart_tool/
+build/
+!build/web
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Platform-specific files (not needed for web)
+android/
+ios/
+linux/
+macos/
+windows/
+
+# Test files
+test/
+integration_test/
+
+# Local env files
+.env.local
+
+# Git
+.git/
+.github/
+
+# Models (not needed for web build)
+assets/models/
+
+# Large binary files
+*.hprof
+*.gguf

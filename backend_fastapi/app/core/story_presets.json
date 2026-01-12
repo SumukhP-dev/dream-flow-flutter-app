@@ -1,0 +1,90 @@
+{
+  "themes": [
+    {
+      "title": "Study Grove",
+      "emoji": "🌿",
+      "description": "Tranquil forest with gentle streams, rustling leaves, and distant bird songs.",
+      "mood": "Focused and clear",
+      "routine": "Deep breathing and intention setting",
+      "category": "focus"
+    },
+    {
+      "title": "Focus Falls",
+      "emoji": "💧",
+      "description": "Cascading waterfall with rhythmic sounds in a secluded, peaceful setting.",
+      "mood": "Centered and attentive",
+      "routine": "Mindful listening and concentration",
+      "category": "focus"
+    },
+    {
+      "title": "Zen Garden",
+      "emoji": "🪨",
+      "description": "Minimalist Japanese garden with raked sand patterns and soft wind chimes.",
+      "mood": "Calm and present",
+      "routine": "Meditation and quiet reflection",
+      "category": "focus"
+    },
+    {
+      "title": "Family Hearth",
+      "emoji": "🔥",
+      "description": "Warm living room with crackling fireplace, cozy blankets, and shared stories.",
+      "mood": "Warm and connected",
+      "routine": "Gathering together for storytime",
+      "category": "family"
+    },
+    {
+      "title": "Campfire Chronicles",
+      "emoji": "🏕️",
+      "description": "Outdoor campfire setting with stars above, perfect for family adventures.",
+      "mood": "Adventurous and together",
+      "routine": "Sharing tales under the night sky",
+      "category": "family"
+    },
+    {
+      "title": "Storybook Nook",
+      "emoji": "📚",
+      "description": "Enchanted library corner with floating books and a magical reading space.",
+      "mood": "Curious and imaginative",
+      "routine": "Cozy reading and discovery",
+      "category": "family"
+    },
+    {
+      "title": "Oceanic Serenity",
+      "emoji": "🌊",
+      "description": "Peaceful beach at night with gentle waves and distant seagull calls.",
+      "mood": "Peaceful and relaxed",
+      "routine": "Listening to the rhythm of the ocean",
+      "category": "unwind"
+    },
+    {
+      "title": "Starlit Sanctuary",
+      "emoji": "✨",
+      "description": "Celestial garden with bioluminescent river paths under a star-filled sky.",
+      "mood": "Dreamy and serene",
+      "routine": "Breathing ritual by the window",
+      "category": "unwind"
+    },
+    {
+      "title": "Whispering Woods",
+      "emoji": "🌲",
+      "description": "Forest spirits hum lullabies with your spirit guide in a tranquil grove.",
+      "mood": "Grounded with soft curiosity",
+      "routine": "Herbal tea and journaling",
+      "category": "unwind"
+    },
+    {
+      "title": "Aurora Dreams",
+      "emoji": "🌌",
+      "description": "Northern lights swirl above floating lagoons in an ethereal landscape.",
+      "mood": "In awe, ready to unwind",
+      "routine": "Stretching + gratitude whisper",
+      "category": "unwind"
+    }
+  ],
+  "featured": [
+    "Study Grove",
+    "Family Hearth",
+    "Oceanic Serenity"
+  ]
+}
+

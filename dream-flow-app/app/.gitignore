@@ -1,0 +1,32 @@
+# Fastlane
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots
+**/fastlane/test_output
+**/fastlane/.env
+
+# iOS
+ios/fastlane/Appfile.local
+
+# Android
+android/fastlane/Appfile.local
+
+# Google Play Service Account Key (should be in secrets)
+fastlane-google-play-key.json
+**/fastlane-google-play-key.json
+
+.env.local
+.env
+
+# ML Model files (too large for git)
+*.tflite
+*.mlmodel
+*.mlpackage
+android/app/src/main/assets/models/*.tflite
+ios/Runner/Resources/Models/*
+*.gguf
+
+# Isar database files (P2P storage - no longer used)
+*.isar
+*.isar.lock
+**/p2p_story_db/

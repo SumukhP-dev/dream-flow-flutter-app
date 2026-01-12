@@ -1,0 +1,16 @@
+{
+  "name": "@dream-flow/supabase-auth",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.ts",
+  "types": "index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./server": "./server.ts",
+    "./middleware": "./middleware.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.5.1",
+    "@supabase/supabase-js": "^2.38.4"
+  }
+}

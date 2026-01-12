@@ -1,0 +1,188 @@
+{
+  "@@locale": "fr",
+  "appTitle": "Dream Flow",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "welcome": "Bienvenue",
+  "@welcome": {
+    "description": "Welcome message"
+  },
+  "generateStory": "Générer une histoire",
+  "@generateStory": {
+    "description": "Button to generate a story"
+  },
+  "bedtimeStory": "Histoire du soir",
+  "@bedtimeStory": {
+    "description": "Bedtime story label"
+  },
+  "myStories": "Mes histoires",
+  "@myStories": {
+    "description": "My stories section"
+  },
+  "settings": "Paramètres",
+  "@settings": {
+    "description": "Settings label"
+  },
+  "login": "Connexion",
+  "@login": {
+    "description": "Login button"
+  },
+  "signup": "Inscription",
+  "@signup": {
+    "description": "Sign up button"
+  },
+  "logout": "Déconnexion",
+  "@logout": {
+    "description": "Logout button"
+  },
+  "home": "Accueil",
+  "@home": {
+    "description": "Home label"
+  },
+  "profile": "Profil",
+  "@profile": {
+    "description": "Profile label"
+  },
+  "subscription": "Abonnement",
+  "@subscription": {
+    "description": "Subscription label"
+  },
+  "free": "Gratuit",
+  "@free": {
+    "description": "Free tier label"
+  },
+  "premium": "Premium",
+  "@premium": {
+    "description": "Premium tier label"
+  },
+  "family": "Famille",
+  "@family": {
+    "description": "Family tier label"
+  },
+  "loading": "Chargement...",
+  "@loading": {
+    "description": "Loading message"
+  },
+  "error": "Erreur",
+  "@error": {
+    "description": "Error label"
+  },
+  "retry": "Réessayer",
+  "@retry": {
+    "description": "Retry button"
+  },
+  "cancel": "Annuler",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  "save": "Enregistrer",
+  "@save": {
+    "description": "Save button"
+  },
+  "delete": "Supprimer",
+  "@delete": {
+    "description": "Delete button"
+  },
+  "edit": "Modifier",
+  "@edit": {
+    "description": "Edit button"
+  },
+  "play": "Lire",
+  "@play": {
+    "description": "Play button"
+  },
+  "pause": "Pause",
+  "@pause": {
+    "description": "Pause button"
+  },
+  "stop": "Arrêter",
+  "@stop": {
+    "description": "Stop button"
+  },
+  "share": "Partager",
+  "@share": {
+    "description": "Share button"
+  },
+  "favorite": "Favori",
+  "@favorite": {
+    "description": "Favorite button"
+  },
+  "theme": "Thème",
+  "@theme": {
+    "description": "Theme label"
+  },
+  "prompt": "Invite",
+  "@prompt": {
+    "description": "Prompt input label"
+  },
+  "mood": "Humeur",
+  "@mood": {
+    "description": "Mood label"
+  },
+  "routine": "Routine",
+  "@routine": {
+    "description": "Routine label"
+  },
+  "preferences": "Préférences",
+  "@preferences": {
+    "description": "Preferences label"
+  },
+  "favoriteCharacters": "Personnages préférés",
+  "@favoriteCharacters": {
+    "description": "Favorite characters label"
+  },
+  "calmingElements": "Éléments apaisants",
+  "@calmingElements": {
+    "description": "Calming elements label"
+  },
+  "parentDashboard": "Tableau de bord parent",
+  "@parentDashboard": {
+    "description": "Parent dashboard title"
+  },
+  "childProfiles": "Profils d'enfants",
+  "@childProfiles": {
+    "description": "Child profiles label"
+  },
+  "addChild": "Ajouter un enfant",
+  "@addChild": {
+    "description": "Add child button"
+  },
+  "bedtimeSchedule": "Horaire du coucher",
+  "@bedtimeSchedule": {
+    "description": "Bedtime schedule label"
+  },
+  "screenTime": "Temps d'écran",
+  "@screenTime": {
+    "description": "Screen time label"
+  },
+  "contentReview": "Révision du contenu",
+  "@contentReview": {
+    "description": "Content review label"
+  },
+  "usageReports": "Rapports d'utilisation",
+  "@usageReports": {
+    "description": "Usage reports label"
+  },
+  "achievements": "Réalisations",
+  "@achievements": {
+    "description": "Achievements label"
+  },
+  "streak": "Série",
+  "@streak": {
+    "description": "Streak label"
+  },
+  "days": "jours",
+  "@days": {
+    "description": "Days label"
+  },
+  "storyCollection": "Collection d'histoires",
+  "@storyCollection": {
+    "description": "Story collection label"
+  },
+  "myFavorites": "Mes favoris",
+  "@myFavorites": {
+    "description": "My favorites label"
+  }
+}
+

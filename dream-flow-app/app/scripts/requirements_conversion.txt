@@ -1,0 +1,30 @@
+# Model Conversion Dependencies
+# Install with: pip install -r requirements_conversion.txt
+
+# Core conversion libraries
+tensorflow>=2.13.0
+coremltools>=7.0
+torch>=2.0.0
+transformers>=4.30.0
+
+# Hugging Face integration
+huggingface-hub>=0.16.0
+accelerate>=0.20.0
+
+# Image model conversion
+diffusers>=0.20.0
+safetensors>=0.3.0
+
+# Utilities
+numpy>=1.24.0
+Pillow>=10.0.0
+tqdm>=4.65.0
+
+# For quantization and optimization
+onnx>=1.14.0
+onnxruntime>=1.15.0
+
+# For TFLite conversion
+tf2onnx>=1.14.0
+onnx-tf>=1.10.0
+
