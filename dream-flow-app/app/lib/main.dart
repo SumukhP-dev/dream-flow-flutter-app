@@ -45,9 +45,15 @@ void main() async {
         isOptional: true,
         mergeWith: localOverrides,
       );
+      // Also load .env.local for local development overrides
+      await dotenv.load(
+        fileName: '.env.local',
+        isOptional: true,
+        mergeWith: dotenv.env,
+      );
       print('✁EEnvironment variables loaded successfully');
     } catch (e) {
-      print('⚠�E�EError loading .env file: $e');
+      print('⚠EEError loading .env file: $e');
       // Initialize with empty config to prevent NotInitializedError
       dotenv.testLoad(fileInput: '');
     }
