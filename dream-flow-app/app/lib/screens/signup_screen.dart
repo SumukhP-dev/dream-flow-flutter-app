@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../core/auth_service.dart';
 import 'login_screen.dart';
+import 'terms_and_conditions_screen.dart';
+import 'privacy_policy_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -416,6 +418,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(height: 20),
                 // Terms and Conditions
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Checkbox(
                       value: _agreeToTerms,
@@ -425,6 +428,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         });
                       },
                       activeColor: const Color(0xFF8B5CF6),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     Expanded(
                       child: RichText(
@@ -435,19 +439,57 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           children: [
                             const TextSpan(text: 'I agree to the '),
-                            TextSpan(
-                              text: 'Terms and Conditions',
-                              style: const TextStyle(
-                                color: Color(0xFF8B5CF6),
-                                decoration: TextDecoration.underline,
+                            WidgetSpan(
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const TermsAndConditionsScreen(),
+                                    ),
+                                  );
+                                },
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  minimumSize: Size.zero,
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                child: const Text(
+                                  'Terms and Conditions',
+                                  style: TextStyle(
+                                    color: Color(0xFF8B5CF6),
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                               ),
                             ),
                             const TextSpan(text: ' and '),
-                            TextSpan(
-                              text: 'Privacy Policy',
-                              style: const TextStyle(
-                                color: Color(0xFF8B5CF6),
-                                decoration: TextDecoration.underline,
+                            WidgetSpan(
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const PrivacyPolicyScreen(),
+                                    ),
+                                  );
+                                },
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  minimumSize: Size.zero,
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                child: const Text(
+                                  'Privacy Policy',
+                                  style: TextStyle(
+                                    color: Color(0xFF8B5CF6),
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                               ),
                             ),
                           ],

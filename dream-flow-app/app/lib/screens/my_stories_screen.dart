@@ -58,7 +58,7 @@ class _MyStoriesScreenState extends State<MyStoriesScreen> {
 
   Future<void> _checkPremiumStatus() async {
     if (widget.isKidMode) return;
-    
+
     final isPremium = await _adService.isUserPremium();
     if (mounted) {
       setState(() {
@@ -112,7 +112,7 @@ class _MyStoriesScreenState extends State<MyStoriesScreen> {
         sessions = await _storyService.getOfflineHistory();
       } else {
         sessions = await _storyService.getHistory(
-          userId: user!.id,
+          userId: user.id,
           limit: _limit,
         );
       }
@@ -290,13 +290,18 @@ class _MyStoriesScreenState extends State<MyStoriesScreen> {
                             crossAxisSpacing: 16,
                             mainAxisSpacing: 16,
                           ),
-                          itemCount: _sessions.length + (_hasMore ? 1 : 0) + (_isNativeAdLoaded ? 1 : 0),
+                          itemCount: _sessions.length +
+                              (_hasMore ? 1 : 0) +
+                              (_isNativeAdLoaded ? 1 : 0),
                           itemBuilder: (context, index) {
                             if (_isNativeAdLoaded && index == 4) {
                               return _buildNativeAdCard();
                             }
 
-                            final sessionIndex = (_isNativeAdLoaded && index > 4) ? index - 1 : index;
+                            final sessionIndex =
+                                (_isNativeAdLoaded && index > 4)
+                                    ? index - 1
+                                    : index;
 
                             if (sessionIndex == _sessions.length) {
                               // Load more trigger

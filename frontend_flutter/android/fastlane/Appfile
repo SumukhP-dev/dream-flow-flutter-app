@@ -1,9 +1,0 @@
-# Appfile for Android
-# Documentation: https://docs.fastlane.tools/advanced/#appfile
-
-json_key_file("../../fastlane-google-play-key.json") # Path to your Google Play service account JSON key
-package_name("com.example.dream_flow") # The package name of your app
-
-# Optional: Specify track for releases
-# track("production") # or "internal", "alpha", "beta"
-

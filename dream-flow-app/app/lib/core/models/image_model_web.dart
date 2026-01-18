@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 
 /// Web-safe stub for ImageModelLoader.
@@ -37,4 +36,3 @@ class ImageModelLoader {
     _loaded = false;
   }
 }
-

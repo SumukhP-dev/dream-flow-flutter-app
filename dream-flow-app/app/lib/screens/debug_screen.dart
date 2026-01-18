@@ -15,7 +15,7 @@ class _DebugScreenState extends State<DebugScreen> {
   String _supabaseStatus = 'Unknown';
   String _backendType = 'Unknown';
   String _currentBackendUrl = 'Unknown';
-  List<String> _backendLogs = [];
+  final List<String> _backendLogs = [];
   bool _isLoading = false;
 
   @override
@@ -27,14 +27,20 @@ class _DebugScreenState extends State<DebugScreen> {
 
   Future<void> _detectBackendInfo() async {
     // Get the current backend URL using the same logic as the app
-    final dartDefineBackendUrl = const String.fromEnvironment('BACKEND_URL', defaultValue: '');
-    final rawBackendUrl = dartDefineBackendUrl.isNotEmpty ? dartDefineBackendUrl : '';
-    
+    final dartDefineBackendUrl =
+        const String.fromEnvironment('BACKEND_URL', defaultValue: '');
+    final rawBackendUrl =
+        dartDefineBackendUrl.isNotEmpty ? dartDefineBackendUrl : '';
+
     setState(() {
-      _currentBackendUrl = rawBackendUrl.isEmpty ? 'http://localhost:8080 (Local Backend)' : rawBackendUrl;
-      _backendType = rawBackendUrl.isEmpty ? '📱 Local (On-Device)' : '☁️ External (FastAPI)';
+      _currentBackendUrl = rawBackendUrl.isEmpty
+          ? 'http://localhost:8080 (Local Backend)'
+          : rawBackendUrl;
+      _backendType = rawBackendUrl.isEmpty
+          ? '📱 Local (On-Device)'
+          : '☁️ External (FastAPI)';
     });
-    
+
     _log('Backend URL: $_currentBackendUrl');
     _log('Backend Type: $_backendType');
   }
@@ -62,7 +68,8 @@ class _DebugScreenState extends State<DebugScreen> {
           .timeout(const Duration(seconds: 5));
 
       setState(() {
-        _healthStatus = 'Status: ${response.statusCode}\nResponse: ${response.body}';
+        _healthStatus =
+            'Status: ${response.statusCode}\nResponse: ${response.body}';
       });
       _log('✅ Health endpoint working: ${response.statusCode}');
     } catch (e) {
@@ -103,9 +110,10 @@ class _DebugScreenState extends State<DebugScreen> {
       // This will be visible in the app logs
       _log('Supabase URL: https://dbpvmfglduprtbpaygmo.supabase.co');
       _log('Check main app logs for "Supabase init completed"');
-      
+
       setState(() {
-        _supabaseStatus = 'Check main logs for "Supabase init completed" message';
+        _supabaseStatus =
+            'Check main logs for "Supabase init completed" message';
       });
     } catch (e) {
       setState(() {
@@ -118,7 +126,8 @@ class _DebugScreenState extends State<DebugScreen> {
   void _log(String message) {
     print('🔍 DEBUG: $message');
     setState(() {
-      _backendLogs.add('${DateTime.now().toString().substring(11, 19)}: $message');
+      _backendLogs
+          .add('${DateTime.now().toString().substring(11, 19)}: $message');
     });
   }
 
@@ -127,7 +136,8 @@ class _DebugScreenState extends State<DebugScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Backend Debug Monitor', style: TextStyle(color: Colors.white)),
+        title: const Text('Backend Debug Monitor',
+            style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.black,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -137,36 +147,42 @@ class _DebugScreenState extends State<DebugScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Backend Type Info (New!)
-            _buildStatusCard('Backend Type', _backendType, 
+            _buildStatusCard('Backend Type', _backendType,
                 _backendType.contains('External') ? Colors.blue : Colors.green),
             const SizedBox(height: 16),
             _buildStatusCard('Backend URL', _currentBackendUrl, Colors.blue),
             const SizedBox(height: 16),
-            
+
             // Status Cards
-            _buildStatusCard('Health Endpoint', _healthStatus, 
+            _buildStatusCard('Health Endpoint', _healthStatus,
                 _healthStatus.contains('200') ? Colors.green : Colors.red),
             const SizedBox(height: 16),
-            _buildStatusCard('Public Stories API', _publicStoriesStatus,
-                _publicStoriesStatus.contains('200') ? Colors.green : Colors.red),
+            _buildStatusCard(
+                'Public Stories API',
+                _publicStoriesStatus,
+                _publicStoriesStatus.contains('200')
+                    ? Colors.green
+                    : Colors.red),
             const SizedBox(height: 16),
-            _buildStatusCard('Supabase Connection', _supabaseStatus, Colors.blue),
-            
+            _buildStatusCard(
+                'Supabase Connection', _supabaseStatus, Colors.blue),
+
             const SizedBox(height: 24),
-            
+
             // Refresh Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: _isLoading ? null : _runAllTests,
-                icon: _isLoading 
+                icon: _isLoading
                     ? const SizedBox(
                         width: 16,
                         height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: Colors.white),
                       )
                     : const Icon(Icons.refresh, color: Colors.white),
-                label: Text(_isLoading ? 'Testing...' : 'Refresh Tests', 
+                label: Text(_isLoading ? 'Testing...' : 'Refresh Tests',
                     style: const TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B5CF6),
@@ -174,9 +190,9 @@ class _DebugScreenState extends State<DebugScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Logs Section
             const Text(
               'Backend Logs:',
@@ -207,13 +223,14 @@ class _DebugScreenState extends State<DebugScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Instructions
             const Text(
               'Quick Tips:',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             _buildTip('✅ Green status = Backend working'),

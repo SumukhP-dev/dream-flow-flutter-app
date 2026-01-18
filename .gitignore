@@ -4,6 +4,8 @@ config.json
 # Environment files
 backend_fastapi/.env
 frontend_flutter/.env
+backend_supabase/local_supabase_env.txt
+backend_supabase/local_supabase_clean.env
 
 # Keystore files
 *.jks

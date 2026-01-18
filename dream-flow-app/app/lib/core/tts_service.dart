@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
@@ -45,20 +44,20 @@ class TTSService {
   Future<void> _initializeAndroid() async {
     try {
       final FlutterTts flutterTts = FlutterTts();
-      
+
       // Set default language and parameters
       await flutterTts.setLanguage("en-US");
       await flutterTts.setSpeechRate(0.5); // Slower for bedtime stories
       await flutterTts.setVolume(1.0);
       await flutterTts.setPitch(1.0);
-      
+
       // Enable platform-specific features
       if (Platform.isAndroid) {
         await flutterTts.awaitSpeakCompletion(true);
         // Set Android-specific settings
         await flutterTts.setSilence(0);
       }
-      
+
       _ttsEngine = flutterTts;
       debugPrint('Android TTS initialized successfully');
     } catch (e) {
@@ -70,19 +69,19 @@ class TTSService {
   Future<void> _initializeIOS() async {
     try {
       final FlutterTts flutterTts = FlutterTts();
-      
+
       // Set default language and parameters
       await flutterTts.setLanguage("en-US");
       await flutterTts.setSpeechRate(0.5); // Slower for bedtime stories
       await flutterTts.setVolume(1.0);
       await flutterTts.setPitch(1.0);
-      
+
       // Enable iOS-specific features
       if (Platform.isIOS) {
         await flutterTts.awaitSpeakCompletion(true);
         // iOS uses AVSpeechSynthesizer which is handled by flutter_tts
       }
-      
+
       _ttsEngine = flutterTts;
       debugPrint('iOS TTS initialized successfully');
     } catch (e) {
@@ -107,12 +106,15 @@ class TTSService {
     try {
       // Generate temporary file path
       final tempDir = await getTemporaryDirectory();
-      final audioFile = File(path.join(tempDir.path, 'tts_${DateTime.now().millisecondsSinceEpoch}.wav'));
+      final audioFile = File(path.join(
+          tempDir.path, 'tts_${DateTime.now().millisecondsSinceEpoch}.wav'));
 
       if (Platform.isAndroid) {
-        await _synthesizeAndroid(text, audioFile, language, voice, speechRate, volume, pitch);
+        await _synthesizeAndroid(
+            text, audioFile, language, voice, speechRate, volume, pitch);
       } else if (Platform.isIOS) {
-        await _synthesizeIOS(text, audioFile, language, voice, speechRate, volume, pitch);
+        await _synthesizeIOS(
+            text, audioFile, language, voice, speechRate, volume, pitch);
       } else {
         throw UnsupportedError('Platform not supported');
       }
@@ -146,7 +148,7 @@ class TTSService {
     if (flutterTts == null) {
       throw Exception('TTS engine not initialized');
     }
-    
+
     try {
       await flutterTts.setLanguage(language);
       if (voice != null) {
@@ -155,22 +157,22 @@ class TTSService {
       await flutterTts.setSpeechRate(speechRate);
       await flutterTts.setVolume(volume);
       await flutterTts.setPitch(pitch);
-      
+
       // Synthesize to file
       final result = await flutterTts.synthesizeToFile(
         text,
         outputFile.path,
       );
-      
+
       if (result != 1) {
         throw Exception('TTS synthesis failed with result code: $result');
       }
-      
+
       // Verify file was created
       if (!await outputFile.exists()) {
         throw Exception('TTS output file was not created');
       }
-      
+
       debugPrint('Android TTS synthesis completed: ${outputFile.path}');
     } catch (e) {
       debugPrint('Android TTS synthesis error: $e');
@@ -192,7 +194,7 @@ class TTSService {
     if (flutterTts == null) {
       throw Exception('TTS engine not initialized');
     }
-    
+
     try {
       await flutterTts.setLanguage(language);
       if (voice != null) {
@@ -201,22 +203,22 @@ class TTSService {
       await flutterTts.setSpeechRate(speechRate);
       await flutterTts.setVolume(volume);
       await flutterTts.setPitch(pitch);
-      
+
       // Synthesize to file
       final result = await flutterTts.synthesizeToFile(
         text,
         outputFile.path,
       );
-      
+
       if (result != 1) {
         throw Exception('TTS synthesis failed with result code: $result');
       }
-      
+
       // Verify file was created
       if (!await outputFile.exists()) {
         throw Exception('TTS output file was not created');
       }
-      
+
       debugPrint('iOS TTS synthesis completed: ${outputFile.path}');
     } catch (e) {
       debugPrint('iOS TTS synthesis error: $e');
@@ -238,7 +240,8 @@ class TTSService {
     try {
       await flutterTts.setLanguage(language);
       await flutterTts.speak(text);
-      debugPrint('TTS speaking: ${text.substring(0, text.length > 50 ? 50 : text.length)}...');
+      debugPrint(
+          'TTS speaking: ${text.substring(0, text.length > 50 ? 50 : text.length)}...');
     } catch (e) {
       debugPrint('TTS speak failed: $e');
       rethrow;
@@ -266,4 +269,3 @@ class TTSService {
   /// Check if service is initialized
   bool get isInitialized => _initialized;
 }
-

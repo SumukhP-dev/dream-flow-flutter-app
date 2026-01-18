@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 
@@ -6,16 +5,16 @@ import 'package:flutter/foundation.dart';
 /// Communicates with native Swift code via MethodChannel
 class CoreMLStoryLoader {
   static const platform = MethodChannel('com.dreamflow/ml');
-  
+
   bool _loaded = false;
-  
+
   /// Load the Core ML story model
   Future<void> load() async {
     if (_loaded) {
       debugPrint('CoreML story model already loaded');
       return;
     }
-    
+
     try {
       final result = await platform.invokeMethod('loadStoryModel');
       if (result == true) {
@@ -29,7 +28,7 @@ class CoreMLStoryLoader {
       rethrow;
     }
   }
-  
+
   /// Generate story text from prompt
   Future<String> generate({
     required String prompt,
@@ -39,25 +38,25 @@ class CoreMLStoryLoader {
     if (!_loaded) {
       await load();
     }
-    
+
     try {
       final result = await platform.invokeMethod<String>('generateStory', {
         'prompt': prompt,
         'maxTokens': maxTokens,
         'temperature': temperature,
       });
-      
+
       if (result == null) {
         throw Exception('No result from story generation');
       }
-      
+
       return result;
     } on PlatformException catch (e) {
       debugPrint('Error generating story with CoreML: ${e.message}');
       rethrow;
     }
   }
-  
+
   /// Check if model is loaded
   Future<bool> isLoaded() async {
     try {
@@ -68,7 +67,7 @@ class CoreMLStoryLoader {
       return false;
     }
   }
-  
+
   /// Unload the model and free resources
   Future<void> unload() async {
     try {

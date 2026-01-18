@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 
@@ -6,16 +5,16 @@ import 'package:flutter/foundation.dart';
 /// Communicates with native Swift code via MethodChannel
 class CoreMLImageLoader {
   static const platform = MethodChannel('com.dreamflow/ml');
-  
+
   bool _loaded = false;
-  
+
   /// Load the Core ML Stable Diffusion models
   Future<void> load() async {
     if (_loaded) {
       debugPrint('CoreML image models already loaded');
       return;
     }
-    
+
     try {
       final result = await platform.invokeMethod('loadImageModel');
       if (result == true) {
@@ -29,7 +28,7 @@ class CoreMLImageLoader {
       rethrow;
     }
   }
-  
+
   /// Generate images from text prompt
   Future<List<Uint8List>> generate({
     required String prompt,
@@ -42,9 +41,10 @@ class CoreMLImageLoader {
     if (!_loaded) {
       await load();
     }
-    
+
     try {
-      final result = await platform.invokeMethod<List<Object?>>('generateImages', {
+      final result =
+          await platform.invokeMethod<List<Object?>>('generateImages', {
         'prompt': prompt,
         'numImages': numImages,
         'width': width,
@@ -52,21 +52,22 @@ class CoreMLImageLoader {
         'numInferenceSteps': numInferenceSteps,
         'guidanceScale': guidanceScale,
       });
-      
+
       if (result == null) {
         throw Exception('No result from image generation');
       }
-      
+
       // Convert result to List<Uint8List>
       final images = <Uint8List>[];
       for (final item in result) {
         if (item is Uint8List) {
           images.add(item);
         } else {
-          debugPrint('Warning: Unexpected image data type: ${item.runtimeType}');
+          debugPrint(
+              'Warning: Unexpected image data type: ${item.runtimeType}');
         }
       }
-      
+
       debugPrint('✓ Generated ${images.length} images with CoreML');
       return images;
     } on PlatformException catch (e) {
@@ -74,7 +75,7 @@ class CoreMLImageLoader {
       rethrow;
     }
   }
-  
+
   /// Check if models are loaded
   Future<bool> isLoaded() async {
     try {
@@ -85,7 +86,7 @@ class CoreMLImageLoader {
       return false;
     }
   }
-  
+
   /// Unload the models and free resources
   Future<void> unload() async {
     try {

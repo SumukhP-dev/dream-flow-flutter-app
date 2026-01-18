@@ -1,0 +1,185 @@
+version: '3.8'
+
+services:
+  # FastAPI Backend
+  api:
+    build:
+      context: ./backend_fastapi
+      dockerfile: Dockerfile
+    container_name: dream-flow-api
+    ports:
+      - "8080:8080"
+    environment:
+      - HUGGINGFACE_API_TOKEN=${HUGGINGFACE_API_TOKEN:-mock_token}
+      - HUGGINGFACE_API_URL=http://mock-hf:8001
+      - STORY_MODEL=${STORY_MODEL:-meta-llama/Llama-3.2-1B-Instruct}
+      - TTS_MODEL=${TTS_MODEL:-suno/bark-small}
+      - IMAGE_MODEL=${IMAGE_MODEL:-black-forest-labs/FLUX.1-schnell}
+      - MAX_NEW_TOKENS=${MAX_NEW_TOKENS:-512}
+      - ASSET_DIR=/app/storage
+      - SUPABASE_URL=http://supabase-kong:8000
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - BACKEND_URL=http://localhost:8080
+      - ADMIN_USER_IDS=${ADMIN_USER_IDS:-}
+    volumes:
+      - ./backend_fastapi/storage:/app/storage
+      - ./backend_fastapi/config:/app/config
+    depends_on:
+      - supabase-db
+      - supabase-auth
+      - supabase-storage
+      - supabase-rest
+      - supabase-kong
+      - mock-hf
+    networks:
+      - dream-flow-network
+    restart: unless-stopped
+
+  # Mock HuggingFace Inference API
+  mock-hf:
+    build:
+      context: ./backend_fastapi
+      dockerfile: Dockerfile.mock-hf
+    container_name: dream-flow-mock-hf
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+    networks:
+      - dream-flow-network
+    restart: unless-stopped
+
+  # Supabase PostgreSQL Database
+  supabase-db:
+    image: public.ecr.aws/supabase/postgres:17.6.1.064
+    container_name: dream-flow-db
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB:-postgres}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXP=${JWT_EXP:-3600}
+    ports:
+      - "54323:5432"
+    volumes:
+      - supabase-db-data:/var/lib/postgresql/data
+      - ./backend_supabase/supabase/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - dream-flow-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Supabase Auth (GoTrue)
+  supabase-auth:
+    image: public.ecr.aws/supabase/gotrue:v2.184.0
+    container_name: dream-flow-auth
+    environment:
+      - GOTRUE_API_HOST=0.0.0.0
+      - GOTRUE_API_PORT=9999
+      - GOTRUE_DB_DRIVER=postgres
+      - GOTRUE_DB_DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@supabase-db:5432/postgres
+      - GOTRUE_SITE_URL=http://localhost:3000
+      - GOTRUE_URI_ALLOW_LIST=
+      - GOTRUE_DISABLE_SIGNUP=false
+      - GOTRUE_JWT_SECRET=${JWT_SECRET}
+      - GOTRUE_JWT_EXP=${JWT_EXP:-3600}
+      - GOTRUE_JWT_DEFAULT_GROUP_NAME=authenticated
+      - GOTRUE_EXTERNAL_EMAIL_ENABLED=true
+      - GOTRUE_MAILER_AUTOCONFIRM=true
+      - API_EXTERNAL_URL=http://localhost:8000
+    ports:
+      - "9999:9999"
+    depends_on:
+      supabase-db:
+        condition: service_healthy
+    networks:
+      - dream-flow-network
+    restart: unless-stopped
+
+  # Supabase Storage
+  supabase-storage:
+    image: public.ecr.aws/supabase/storage-api:v1.33.5
+    container_name: dream-flow-storage
+    environment:
+      - ANON_KEY=${SUPABASE_ANON_KEY}
+      - SERVICE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@supabase-db:5432/postgres
+      - POSTGRES_HOST=supabase-db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGRST_JWT_SECRET=${JWT_SECRET}
+      - FILE_SIZE_LIMIT=52428800
+      - STORAGE_BACKEND=file
+      - FILE_STORAGE_BACKEND_PATH=/var/lib/storage
+      - TENANT_ID=stub
+    ports:
+      - "5000:5000"
+    volumes:
+      - supabase-storage-data:/var/lib/storage
+    depends_on:
+      supabase-db:
+        condition: service_healthy
+    networks:
+      - dream-flow-network
+    restart: unless-stopped
+
+  # Supabase PostgREST (REST API for PostgreSQL)
+  supabase-rest:
+    image: public.ecr.aws/supabase/postgrest:v14.3
+    container_name: dream-flow-rest
+    environment:
+      - PGRST_DB_URI=postgres://postgres:${POSTGRES_PASSWORD}@supabase-db:5432/postgres
+      - PGRST_DB_SCHEMAS=public,storage
+      - PGRST_DB_ANON_ROLE=anon
+      - PGRST_DB_SEARCH_PATH=public,auth,storage
+      - PGRST_JWT_SECRET=${JWT_SECRET}
+      - PGRST_DB_USE_LEGACY_GUCS=false
+      - PGRST_SERVER_PROXY_URI=
+    ports:
+      - "3000:3000"
+    depends_on:
+      supabase-db:
+        condition: service_healthy
+    networks:
+      - dream-flow-network
+    restart: unless-stopped
+
+  # Supabase Kong API Gateway
+  supabase-kong:
+    image: public.ecr.aws/supabase/kong:2.8.1
+    container_name: dream-flow-kong
+    environment:
+      - KONG_DATABASE=off
+      - KONG_DECLARATIVE_CONFIG=/var/lib/kong/kong.yml
+      - KONG_DNS_ORDER=LAST,A,CNAME
+      - KONG_PLUGINS=request-transformer,cors,key-auth,acl
+      - KONG_NGINX_PROXY_PROXY_BUFFER_SIZE=160k
+      - KONG_NGINX_PROXY_PROXY_BUFFERS=64 160k
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+    volumes:
+      - ./docker/kong.yml:/var/lib/kong/kong.yml:ro
+    depends_on:
+      - supabase-auth
+      - supabase-storage
+      - supabase-rest
+    networks:
+      - dream-flow-network
+    restart: unless-stopped
+
+volumes:
+  supabase-db-data:
+  supabase-storage-data:
+
+networks:
+  dream-flow-network:
+    driver: bridge

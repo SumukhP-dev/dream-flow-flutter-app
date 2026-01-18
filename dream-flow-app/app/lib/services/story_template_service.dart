@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../core/backend_url_helper.dart';
@@ -75,7 +74,7 @@ class StoryTemplatesResponse {
     final templatesList = (json['templates'] as List<dynamic>)
         .map((item) => StoryTemplate.fromJson(item as Map<String, dynamic>))
         .toList();
-    
+
     final featuredList = (json['featured'] as List<dynamic>)
         .map((item) => StoryTemplate.fromJson(item as Map<String, dynamic>))
         .toList();
@@ -98,7 +97,7 @@ class StoryTemplatesResponse {
 
 class StoryTemplateService {
   static const String _defaultBackendUrl = 'http://localhost:8080';
-  
+
   // Cache templates to avoid repeated API calls
   StoryTemplatesResponse? _cachedTemplates;
   DateTime? _lastFetchTime;
@@ -111,7 +110,8 @@ class StoryTemplateService {
     );
   }
 
-  Future<StoryTemplatesResponse> getStoryTemplates({bool forceRefresh = false}) async {
+  Future<StoryTemplatesResponse> getStoryTemplates(
+      {bool forceRefresh = false}) async {
     // Check cache first
     if (!forceRefresh && _cachedTemplates != null && _lastFetchTime != null) {
       final timeSinceLastFetch = DateTime.now().difference(_lastFetchTime!);
@@ -124,7 +124,7 @@ class StoryTemplateService {
     try {
       debugPrint('🔍 Fetching story templates from backend: $_backendUrl');
       final url = Uri.parse('$_backendUrl/api/v1/templates');
-      
+
       final response = await http.get(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -133,15 +133,17 @@ class StoryTemplateService {
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body) as Map<String, dynamic>;
         final templatesResponse = StoryTemplatesResponse.fromJson(jsonData);
-        
+
         // Cache the result
         _cachedTemplates = templatesResponse;
         _lastFetchTime = DateTime.now();
-        
-        debugPrint('✅ Successfully fetched ${templatesResponse.templates.length} story templates');
+
+        debugPrint(
+            '✅ Successfully fetched ${templatesResponse.templates.length} story templates');
         return templatesResponse;
       } else {
-        debugPrint('⚠️ Backend returned ${response.statusCode}: ${response.body}');
+        debugPrint(
+            '⚠️ Backend returned ${response.statusCode}: ${response.body}');
         return _getFallbackTemplates();
       }
     } catch (e) {
@@ -152,18 +154,20 @@ class StoryTemplateService {
 
   StoryTemplatesResponse _getFallbackTemplates() {
     debugPrint('🔄 Using fallback story templates');
-    
+
     final fallbackTemplates = [
       StoryTemplate(
         id: 'fallback-1',
         title: 'Study Grove',
         emoji: '🌿',
-        description: 'Tranquil forest with gentle streams, rustling leaves, and distant bird songs.',
+        description:
+            'Tranquil forest with gentle streams, rustling leaves, and distant bird songs.',
         mood: 'Focused and clear',
         routine: 'Deep breathing and intention setting',
         category: 'focus',
         isFeatured: true,
-        sampleStoryText: 'Once upon a time, in the heart of Study Grove, gentle streams carried whispers of ancient wisdom...',
+        sampleStoryText:
+            'Once upon a time, in the heart of Study Grove, gentle streams carried whispers of ancient wisdom...',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
@@ -171,12 +175,14 @@ class StoryTemplateService {
         id: 'fallback-2',
         title: 'Family Hearth',
         emoji: '🔥',
-        description: 'Warm living room with crackling fireplace, cozy blankets, and shared stories.',
+        description:
+            'Warm living room with crackling fireplace, cozy blankets, and shared stories.',
         mood: 'Warm and connected',
         routine: 'Gathering together for storytime',
         category: 'family',
         isFeatured: true,
-        sampleStoryText: 'Around the Family Hearth, golden flames danced with stories of love and togetherness...',
+        sampleStoryText:
+            'Around the Family Hearth, golden flames danced with stories of love and togetherness...',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
@@ -184,12 +190,14 @@ class StoryTemplateService {
         id: 'fallback-3',
         title: 'Oceanic Serenity',
         emoji: '🌊',
-        description: 'Peaceful beach at night with gentle waves and distant seagull calls.',
+        description:
+            'Peaceful beach at night with gentle waves and distant seagull calls.',
         mood: 'Peaceful and relaxed',
         routine: 'Listening to the rhythm of the ocean',
         category: 'unwind',
         isFeatured: true,
-        sampleStoryText: 'As twilight painted the sky in soft pastels, Oceanic Serenity revealed its magic...',
+        sampleStoryText:
+            'As twilight painted the sky in soft pastels, Oceanic Serenity revealed its magic...',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
@@ -197,7 +205,7 @@ class StoryTemplateService {
 
     final featured = fallbackTemplates.where((t) => t.isFeatured).toList();
     final categories = <String, List<StoryTemplate>>{};
-    
+
     for (final template in fallbackTemplates) {
       categories.putIfAbsent(template.category, () => []).add(template);
     }

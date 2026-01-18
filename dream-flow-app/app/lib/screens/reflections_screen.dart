@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../services/reflection_service.dart';
-import '../widgets/kid_empty_state_widget.dart';
 
 /// Full screen showing user's reflection history and insights
 class ReflectionsScreen extends StatefulWidget {

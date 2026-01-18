@@ -259,14 +259,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final normalizedError = errorMessage.toLowerCase();
       final isAuthError = normalizedError.contains('not authenticated') ||
           normalizedError.contains('no access token') ||
-          normalizedError.contains('supabase instance has not been initialized');
-      
+          normalizedError
+              .contains('supabase instance has not been initialized');
+
       final isConnectionError = normalizedError.contains('connection') ||
           normalizedError.contains('timeout') ||
           normalizedError.contains('failed to fetch') ||
           normalizedError.contains('network') ||
           normalizedError.contains('503');
-      
+
       if (isAuthError) {
         if (!mounted) return;
         setState(() {
@@ -278,7 +279,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       } else if (isConnectionError) {
         if (!mounted) return;
         setState(() {
-          _error = "Can't connect to the server right now. This could be because the backend service isn't running.";
+          _error =
+              "Can't connect to the server right now. This could be because the backend service isn't running.";
           _isLoading = false;
         });
       } else {
@@ -774,7 +776,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ? _childProfiles.first['id'] as String?
             : null);
     return DropdownButtonFormField<String>(
-      value: selectedId,
+      initialValue: selectedId,
       items: _childProfiles
           .map(
             (profile) {

@@ -23,12 +23,12 @@ import 'dart:io';
 void main() async {
   // Initialize bindings first to establish the zone before Sentry
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Mobile Ads SDK
   if (!kIsWeb) {
     unawaited(MobileAds.instance.initialize());
   }
-  
+
   // Load .env file (if it exists). This must run on *all* platforms before any
   // access to `dotenv.env`, otherwise flutter_dotenv throws NotInitializedError.
   //
@@ -45,9 +45,15 @@ void main() async {
         isOptional: true,
         mergeWith: localOverrides,
       );
+      // Also load .env.local for local development overrides
+      await dotenv.load(
+        fileName: '.env.local',
+        isOptional: true,
+        mergeWith: dotenv.env,
+      );
       print('✁EEnvironment variables loaded successfully');
     } catch (e) {
-      print('⚠�E�EError loading .env file: $e');
+      print('⚠EEError loading .env file: $e');
       // Initialize with empty config to prevent NotInitializedError
       dotenv.testLoad(fileInput: '');
     }
@@ -85,7 +91,7 @@ void main() async {
     },
     appRunner: () async {
       // Bindings already initialized before Sentry.init to avoid zone mismatch
-      
+
       // Detect hardware capabilities and set environment variables
       // This must happen before backend initialization
       Map<String, String> hardwareEnvVars = {};
@@ -103,7 +109,9 @@ void main() async {
           print('⚠�E�EHardware detection failed: $e');
           // Set defaults if detection fails
           hardwareEnvVars = {
-            'MOBILE_PLATFORM': Platform.isAndroid ? 'android' : (Platform.isIOS ? 'ios' : 'other'),
+            'MOBILE_PLATFORM': Platform.isAndroid
+                ? 'android'
+                : (Platform.isIOS ? 'ios' : 'other'),
             'HAS_TENSOR_CHIP': 'false',
             'HAS_NEURAL_ENGINE': 'false',
             'HAS_TFLITE_MODELS': 'false',
@@ -111,7 +119,7 @@ void main() async {
           };
         }
       }
-      
+
       // Check if external backend URL is provided from --dart-define (highest priority) or .env
       // --dart-define takes precedence over .env file
       final dartDefineBackendUrl = const String.fromEnvironment(
@@ -119,11 +127,11 @@ void main() async {
         defaultValue: '',
       );
       final envBackendUrl = dotenv.env['BACKEND_URL'] ?? '';
-      
+
       print('🔍 Backend URL resolution:');
       print('  --dart-define BACKEND_URL: "$dartDefineBackendUrl"');
       print('  .env BACKEND_URL: "$envBackendUrl"');
-      
+
       final rawBackendUrl = dartDefineBackendUrl.isNotEmpty
           ? dartDefineBackendUrl
           : envBackendUrl;
@@ -137,10 +145,10 @@ void main() async {
 
       // Only start local backend if no external backend is configured and not on web
       // Check the RAW URL to determine if it's local (before Android emulator conversion)
-      final isLocalBackend = rawBackendUrl.isEmpty || 
+      final isLocalBackend = rawBackendUrl.isEmpty ||
           rawBackendUrl == 'http://localhost:8080' ||
           rawBackendUrl == 'http://127.0.0.1:8080';
-          
+
       if (isLocalBackend && !kIsWeb) {
         // Start ML HTTP server for native ML inference (runs on port 8081)
         // This allows the backend to call native ML via HTTP
@@ -152,7 +160,7 @@ void main() async {
           print('⚠�E�EFailed to start ML HTTP server: $e');
           // Continue anyway - backend will fall back to GGUF models
         }
-        
+
         // Start local backend server - wait for it to be ready
         // This ensures the backend is available before the app makes requests
         // Pass hardware environment variables to backend
@@ -171,7 +179,8 @@ void main() async {
         // Note: For external backend, hardware detection would need to be passed
         // via request headers or backend would detect from User-Agent
       } else if (kIsWeb) {
-        print('⚠�E�ERunning on web - local backend not available. Configure BACKEND_URL for web.');
+        print(
+            '⚠�E�ERunning on web - local backend not available. Configure BACKEND_URL for web.');
       }
 
       // Initialize Supabase with configuration from .env or --dart-define
@@ -269,7 +278,7 @@ class _MyAppState extends State<MyApp> {
       'NotoColorEmoji',
     ];
 
-    TextTheme _applyAppFonts(TextTheme t) => t.copyWith(
+    TextTheme applyAppFonts(TextTheme t) => t.copyWith(
           displayLarge: t.displayLarge?.copyWith(
             fontFamily: 'NotoSans',
             fontFamilyFallback: appFontFallback,
@@ -349,8 +358,8 @@ class _MyAppState extends State<MyApp> {
         : baseTheme;
 
     final themedWithFonts = theme.copyWith(
-      textTheme: _applyAppFonts(theme.textTheme),
-      primaryTextTheme: _applyAppFonts(theme.primaryTextTheme),
+      textTheme: applyAppFonts(theme.textTheme),
+      primaryTextTheme: applyAppFonts(theme.primaryTextTheme),
     );
 
     return MaterialApp(
@@ -405,7 +414,8 @@ class _AuthWrapperState extends State<AuthWrapper> {
         final fragment = uri.fragment;
         // If there's an authentication error, just proceed to show login screen
         // Don't try to process invalid OAuth callbacks
-        if (fragment.contains('error=') || fragment.contains('error_description=')) {
+        if (fragment.contains('error=') ||
+            fragment.contains('error_description=')) {
           // Clear loading and show login screen
           if (mounted) {
             setState(() {

@@ -23,7 +23,7 @@ environment:
 
 flutter:
   uses-material-design: true
-  generate: false
+  generate: true
   assets:
     - assets/images/
     # .env files are loaded optionally - for web builds, use --dart-define instead

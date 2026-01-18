@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../services/quest_service.dart';
 
@@ -48,10 +46,11 @@ class _CalmQuestsScreenState extends State<CalmQuestsScreen> {
 
       // Generate badge content
       final badgeContent = _generateBadgeContent(reward);
-      
+
       // Save to temporary file
       final directory = await getTemporaryDirectory();
-      final filePath = '${directory.path}/${reward.title.replaceAll(' ', '_')}.txt';
+      final filePath =
+          '${directory.path}/${reward.title.replaceAll(' ', '_')}.txt';
       final file = File(filePath);
       await file.writeAsString(badgeContent);
 
@@ -80,7 +79,7 @@ class _CalmQuestsScreenState extends State<CalmQuestsScreen> {
       if (mounted && Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
-      
+
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -235,17 +234,18 @@ class _QuestCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Progress bar
             LinearProgressIndicator(
               value: quest.progress,
               backgroundColor: const Color(0xFF3D3D5C),
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF8B7FFF)),
+              valueColor:
+                  const AlwaysStoppedAnimation<Color>(Color(0xFF8B7FFF)),
               minHeight: 6,
               borderRadius: BorderRadius.circular(3),
             ),
             const SizedBox(height: 16),
-            
+
             // Quest steps/checkboxes
             ...quest.steps.asMap().entries.map(
               (entry) {
@@ -258,12 +258,12 @@ class _QuestCard extends StatelessWidget {
                         width: 24,
                         height: 24,
                         decoration: BoxDecoration(
-                          color: isComplete 
-                              ? const Color(0xFF8B7FFF) 
+                          color: isComplete
+                              ? const Color(0xFF8B7FFF)
                               : Colors.transparent,
                           border: Border.all(
-                            color: isComplete 
-                                ? const Color(0xFF8B7FFF) 
+                            color: isComplete
+                                ? const Color(0xFF8B7FFF)
                                 : Colors.white.withValues(alpha: 0.3),
                             width: 2,
                           ),
@@ -282,8 +282,8 @@ class _QuestCard extends StatelessWidget {
                         child: Text(
                           entry.value.label,
                           style: TextStyle(
-                            color: isComplete 
-                                ? Colors.white 
+                            color: isComplete
+                                ? Colors.white
                                 : Colors.white.withValues(alpha: 0.6),
                             fontSize: 15,
                           ),
@@ -295,11 +295,12 @@ class _QuestCard extends StatelessWidget {
               },
             ),
             const SizedBox(height: 16),
-            
+
             // Reward badge button
             if (quest.isComplete && quest.claimed) ...[
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: const Color(0xFF3D3D5C),
                   borderRadius: BorderRadius.circular(20),
@@ -317,8 +318,8 @@ class _QuestCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        quest.reward.type == 'printable' 
-                            ? Icons.print 
+                        quest.reward.type == 'printable'
+                            ? Icons.print
                             : Icons.view_in_ar,
                         size: 16,
                         color: Colors.white.withValues(alpha: 0.8),
@@ -356,7 +357,8 @@ class _QuestCard extends StatelessWidget {
               ),
             ] else if (quest.isComplete && !quest.claimed) ...[
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: const Color(0xFF3D3D5C),
                   borderRadius: BorderRadius.circular(20),
@@ -365,8 +367,8 @@ class _QuestCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      quest.reward.type == 'printable' 
-                          ? Icons.print 
+                      quest.reward.type == 'printable'
+                          ? Icons.print
                           : Icons.view_in_ar,
                       size: 16,
                       color: Colors.white.withValues(alpha: 0.8),
@@ -407,7 +409,8 @@ class _QuestCard extends StatelessWidget {
               ),
             ] else ...[
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: const Color(0xFF3D3D5C),
                   borderRadius: BorderRadius.circular(20),
@@ -416,8 +419,8 @@ class _QuestCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      quest.reward.type == 'printable' 
-                          ? Icons.print 
+                      quest.reward.type == 'printable'
+                          ? Icons.print
                           : Icons.view_in_ar,
                       size: 16,
                       color: Colors.white.withValues(alpha: 0.5),
@@ -440,4 +443,3 @@ class _QuestCard extends StatelessWidget {
     );
   }
 }
-
